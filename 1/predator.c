@@ -55,13 +55,13 @@ typedef struct
   int y;
 } predator_position;
 
-typedef struct predatorAstar
+typedef struct __predatorAstar
 {
   predator_position pos;
   STATUS status;
   int cost;
   int heuristic;
-  predatorAstar *parent;
+  struct __predatorAstar *parent;
 } predatorAstar;
 
 int predatorGetScore(predatorAstar it)
@@ -76,7 +76,7 @@ int predatorGetDistance(predator_position from, predator_position to)
   return result;
 }
 
-int predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_position from, predator_position to)
+predator_position *predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_position from, predator_position to)
 {
   predatorAstar worldAstar[WORLD_SIZE][WORLD_SIZE];
   predator_position here = from;
@@ -172,9 +172,67 @@ int predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_position from, pr
     here.y = min_y;
   }
 
+  here = to;
+  predator_position *root;
+  root = (predator_position *)malloc(worldAstar[to.x][to.y].cost * sizeof(predator_position));
+  while(worldAstar[here.x][here.y].parent != NULL)
+  {
+    root[worldAstar[here.x][here.y].cost] = here;
+    here = worldAstar[here.x][here.y].parent->pos;
+  }
+
+  return root;
 }
 
 void predator(int world[WORLD_SIZE][WORLD_SIZE], int *action)
 {
+  predator_position *root;
+  predator_position prey;
+  predator_position predator;
+  for(int i = 0;i < WORLD_SIZE;i++)
+  {
+    for(int j = 0;j < WORLD_SIZE;j++)
+    {
+      if(world[i][j] == VALUE_OF_PREY)
+      {
+        prey.x = i;
+        prey.y = j;
+      }
+      if(world[i][j] == VALUE_OF_PREDATOR)
+      {
+        predator.x = i;
+        predator.y = j;
+      }
+    }
+  }
+  root = predatorSearch(world, predator, prey);
+  if(predator.x == root[1].x)
+  {
+    if(predator.y - root[1].y < 0)
+    {
+      *action = 'u';
+      return;
+    }else
+    {
+      *action = 'd';
+      return;
+    }
+  }
+  if(predator.y == root[1].y) 
+  {
+    if(predator.x - root[1].x < 0)
+    {
+      *action = 'l';
+      return;
+    }else
+    {
+      *action = 'r';
+      return;
+    }
+  }
+}
 
+int main(void)
+{
+  return 0;
 }
