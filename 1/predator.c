@@ -1,4 +1,12 @@
 /*
+  Author:      Kamada Kouki
+ Student ID:   b1015047
+ Class:        J
+ Created:      October 27, 2017
+ Language:     C
+*/
+
+/*
  * 必要なライブラリのロード
  * (stdio.hおよびstdlib.h)
  */
