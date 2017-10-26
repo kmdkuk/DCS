@@ -42,12 +42,12 @@
 #define WORLD_SIZE 8
 #endif
 
-enum STATUS
+typedef enum 
 {
   NONE,
   OPEN,
   CLOSED,
-};
+} STATUS;
 
 typedef struct 
 {
@@ -63,6 +63,11 @@ typedef struct predatorAstar
   int heuristic;
   predatorAstar *parent;
 } predatorAstar;
+
+int predatorGetScore(predatorAstar it)
+{
+  return it.cost + it.heuristic;
+}
 
 int predatorGetDistance(predator_position from, predator_position to)
 {
@@ -141,6 +146,30 @@ int predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_position from, pr
       }
     }
     worldAstar[here.x][here.y].status = CLOSED;
+
+    int min = 999;
+    int min_x;
+    int min_y;
+
+    for(int i = 0;i < WORLD_SIZE;i++)
+    {
+      for(int j = 0;j < WORLD_SIZE;j++)
+      {
+        if(min > predatorGetScore(worldAstar[i][j]))
+        {
+          min = predatorGetScore(worldAstar[i][j]);
+          min_x = i;
+          min_y = j;
+        }
+        if(worldAstar[i][j].status == OPEN)
+        {
+          if(i == to.x && j == to.y) break;
+        }
+      }
+    }
+
+    here.x = min_x;
+    here.y = min_y;
   }
 
 }
