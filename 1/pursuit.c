@@ -1,55 +1,55 @@
 /*
- * 2 Players Pursuit Game ´ÉÍý¥×¥í¥°¥é¥à
+ * 2 Players Pursuit Game �����ץ������
  * version 1.2 SP2
  *
  * by E. Osawa and E. Yoshikawa, Sept 2002.
  * 
  * last revision by E. Osawa Oct. 2002
  *
- * (ÊÑ¹¹ÍúÎò)
- * 2002.10.1            ¾ã³²Êª,¼«Í³³Ê»Ò,Êá¿©¼Ô,³ÍÊª¤òÉ½¤¹Äê¿ô¤ÎÆ³Æþ
+ * (�ѹ�����)
+ * 2002.10.1            �㳲ʪ,��ͳ�ʻ�,�Ῡ��,��ʪ��ɽ�������Ƴ��
  *
- * 2000.12.26(1.2.1)    ¥³¥á¥ó¥ÈÄÉ²Ã
- *                      thread¥­¥ã¥ó¥»¥ë»þ¤Îsegmentation fault¤Î²ò¾Ã
- * 2000.12.25(1.2)      watch dog timer¤òÄÉ²Ã¡¥
- *                      Prey¤äPredator¤Î¼Â¹Ô»þ´Ö¤¬1ÉÃ¤«´Æ»ë¤¹¤ë¡¥
- * 2000.12.20(1.1 SP2): ¥ª¥×¥·¥ç¥ó¤Ë´Ø¤¹¤ë¥¨¥é¡¼½èÍý¤ò¶¯²½¡£
- *                      Éé¤ÎÃÍ¤ò»ØÄê¤¹¤ë¤ÈÌµ¸Â¥ë¡¼¥×¤Ë´Ù¤ë¸½¾Ý¤ä¡¢
- *                      ¥ª¥×¥·¥ç¥ó¤Î¤ß¤¬»ØÄê¤µ¤ì¤Æ¤â¥¨¥é¡¼¤ò½Ð¤µ¤Ê¤¤¸½¾Ý¡¢
- *                      Ì¤ÄêµÁ¤Î¥ª¥×¥·¥ç¥ó¤ËÂÐ¤·¤Æ¥¨¥é¡¼¤ò½Ð¤µ¤Ê¤¤¸½¾Ý¤Ê¤É¤ò
- *                      ²þÁ±
+ * 2000.12.26(1.2.1)    �������ɲ�
+ *                      thread����󥻥����segmentation fault�β��
+ * 2000.12.25(1.2)      watch dog timer���ɲá�
+ *                      Prey��Predator�μ¹Ի��֤�1�ä��ƻ뤹�롥
+ * 2000.12.20(1.1 SP2): ���ץ����˴ؤ��륨�顼�����򶯲���
+ *                      ����ͤ���ꤹ���̵�¥롼�פ˴٤븽�ݤ䡢
+ *                      ���ץ����Τߤ����ꤵ��Ƥ⥨�顼��Ф��ʤ����ݡ�
+ *                      ̤����Υ��ץ������Ф��ƥ��顼��Ф��ʤ����ݤʤɤ�
+ *                      ����
  *
- * 2000.12.20(1.1 SP1): Prey¤äPredator¤Î·×»»ÀêÍ­»þ´Ö¤Ë¤è¤Ã¤Æ¡¢É½¼¨¤Î¹¹¿·¤¬
- *                      ¤Á¤é¤Ä¤¯¸½¾Ý¤ò²þÁ±
- *                      ¥Ç¥Õ¥©¥ë¥È¤Î³Ê»ÒÀ¤³¦¥Õ¥¡¥¤¥ë¤ò"battlefield.txt"¤«¤é
- *                      "battlefield.dat"¤ËÊÑ¹¹
+ * 2000.12.20(1.1 SP1): Prey��Predator�η׻���ͭ���֤ˤ�äơ�ɽ���ι�����
+ *                      ����Ĥ����ݤ����
+ *                      �ǥե���Ȥγʻ������ե������"battlefield.txt"����
+ *                      "battlefield.dat"���ѹ�
  * 
- * 2000.12.20(1.1)    : É½¼¨¤ÎºÝ¤Ë¤¤¤ì¤ë¥¦¥§¥¤¥È(¤Î¥Ç¥Õ¥©¥ë¥È)¤ò0.5ÉÃ¤ËÄ´À°
- *                      ¥²¡¼¥à¥¹¥Æ¥Ã¥×¿ô(¤Î¥Ç¥Õ¥©¥ë¥È)¤ò30¤ËÊÑ¹¹
- *                      ¥²¡¼¥à¥¹¥Æ¥Ã¥×¿ô¤ò"-s 30",¥¦¥§¥¤¥È¤ÎÂç¤­¤µ¤ò
- *                      "-t 500000",¤Þ¤¿¡¢½é´ü¥Ç¡¼¥¿¤¬³ÊÇ¼¤µ¤ì¤Æ¤¤¤ë
- *                      "-w battlefield2.txt"¤Î¤è¤¦¤Ë¡¢¼Â¹Ô¥Õ¥¡¥¤¥ë¤ËÂÐ¤¹¤ë
- *                      ¥ª¥×¥·¥ç¥ó¤È¤·¤Æruntime¤ËÆÉ¤ß¹þ¤á¤ë¤è¤¦¤ËÊÑ¹¹
- *                      Predator¤ÈPrey¤Î¾¡ÇÔ¤Ë´Ø¤¹¤ë¥á¥Ã¥»¡¼¥¸É½¼¨¤òÄÉ²Ã
+ * 2000.12.20(1.1)    : ɽ���κݤˤ���륦������(�Υǥե����)��0.5�ä�Ĵ��
+ *                      �����ॹ�ƥå׿�(�Υǥե����)��30���ѹ�
+ *                      �����ॹ�ƥå׿���"-s 30",�������Ȥ��礭����
+ *                      "-t 500000",�ޤ�������ǡ�������Ǽ����Ƥ���
+ *                      "-w battlefield2.txt"�Τ褦�ˡ��¹ԥե�������Ф���
+ *                      ���ץ����Ȥ���runtime���ɤ߹����褦���ѹ�
+ *                      Predator��Prey�ξ��Ԥ˴ؤ����å�����ɽ�����ɲ�
  * 
- * 2000.12.19(1.0 SP2): ¹½Â¤ÂÎÌ¾¤òposition¢ªpursuit_position¤ØÊÑ¹¹
- *                      Prey¤ª¤è¤ÓPredator¤ØÅÏ¤¹³Ê»ÒÀ¤³¦¤ÎÇÛÎó¤ò,
- *                      ¤½¤Î¤â¤Î¤Î»²¾ÈÅÏ¤·¢ª¥³¥Ô¡¼¤Î»²¾ÈÅÏ¤·¤ËÊÑ¹¹
- *                      (Predator¤äPrey¤¬³Ê»ÒÀ¤³¦¤ò½ñ¤­´¹¤¨¤ë¤³¤È¤òËÉ¤°¤¿¤á)
- *                      Prey¤¬¡Ö3²ó¤Î¤¦¤Á¤Ë2²ó¤À¤±Æ°¤±¤ë¡×¤È¤¤¤¦»ÅÍÍ¤Î²ò¼á¤ò
- *                      ÊÑ¹¹¡¢¡ÖÆ°¤±¤ë³ÎÎ¨66¡ó¡×¤È¤¤¤¦³ÎÎ¨Åª¤ÊµóÆ°¤«¤é
- *                     ¡Ö2²óÆ°¤¤¤Æ1²óµÙ¤à¡×¤È¤¤¤¦³ÎÄêÅª¤ÊµóÆ°¤Ø
+ * 2000.12.19(1.0 SP2): ��¤��̾��position��pursuit_position���ѹ�
+ *                      Prey�����Predator���Ϥ��ʻ������������,
+ *                      ���Τ�Τλ����Ϥ������ԡ��λ����Ϥ����ѹ�
+ *                      (Predator��Prey���ʻ�������񤭴����뤳�Ȥ��ɤ�����)
+ *                      Prey����3��Τ�����2�����ư����פȤ������ͤβ���
+ *                      �ѹ�����ư�����Ψ66��פȤ�����ΨŪ�ʵ�ư����
+ *                     ��2��ư����1��٤�פȤ�������Ū�ʵ�ư��
  *
- * 2000.12.15(1.0 SP1): »ÅÍÍ¤Ë¹çÃ×¤·¤Æ¤¤¤Ê¤¤ÅÀ¤ò²þÁ±
- *                      (ÇÛÎó¤Î½Ä¤È²£¤¬µÕÅ¾¤·¤Æ¤¤¤¿¤Î¤ò½¤Àµ)
+ * 2000.12.15(1.0 SP1): ���ͤ˹��פ��Ƥ��ʤ��������
+ *                      (����νĤȲ�����ž���Ƥ����Τ���)
  */
 
 
 #define VERSION_1_2 1
 
 /*
- * É¬Í×¤Ê¥é¥¤¥Ö¥é¥ê¤Î¥í¡¼¥É
- * (stdio.h¤ª¤è¤Óstdlib.h)
+ * ɬ�פʥ饤�֥��Υ�����
+ * (stdio.h�����stdlib.h)
  */
 #ifndef STDIO_H
 #define STDIO_H
@@ -72,52 +72,52 @@
 #endif /* PTHREAD_H */
 #endif /* VERSION_1_2 */
 
-/* predator¤Î¿ôÃÍÉ½¸½ */
+/* predator�ο���ɽ�� */
 #ifndef VALUE_OF_PREDATOR
 #define VALUE_OF_PREDATOR 1
 #endif
 
-/* prey¤Î¿ôÃÍÉ½¸½ */
+/* prey�ο���ɽ�� */
 #ifndef VALUE_OF_PREY
 #define VALUE_OF_PREY 10
 #endif
 
-/* obstacle¤Î¿ôÃÍÉ½¸½ */
+/* obstacle�ο���ɽ�� */
 #ifndef VALUE_OF_OBSTACLE
 #define VALUE_OF_OBSTACLE -1
 #endif
 
-/* free grid¤Î¿ôÃÍÉ½¸½ */
+/* free grid�ο���ɽ�� */
 #ifndef VALUE_OF_FREE
 #define VALUE_OF_FREE 0
 #endif
 
-/* ³Ê»ÒÀ¤³¦¤ÎÂç¤­¤µ */
+/* �ʻ��������礭�� */
 #ifndef WORLD_SIZE
 #define WORLD_SIZE 8
 #endif
  
-/* ·«¤êÊÖ¤·¥¹¥Æ¥Ã¥×¿ô(¥Ç¥Õ¥©¥ë¥ÈÃÍ) */
+/* �����֤����ƥå׿�(�ǥե������) */
 #ifndef GAME_NUM
 #define GAME_NUM 30
 #endif
 
-/* VALID(ÂÅÅö¤Ç¤¢¤ë) */
+/* VALID(�����Ǥ���) */
 #ifndef VALID
 #define VALID 1
 #endif
 
-/* INVALID(ÂÅÅö¤Ç¤Ê¤¤) */
+/* INVALID(�����Ǥʤ�) */
 #ifndef INVALID
 #define INVALID 0
 #endif
 
-/* ³Ê»ÒÀ¤³¦¥Õ¥¡¥¤¥ëÌ¾¤ÎºÇÂçÊ¸»ú¿ô */
+/* �ʻ������ե�����̾�κ���ʸ���� */
 #ifndef WORLD_FILE_NAME_LENGTH
 #define WORLD_FILE_NAME_LENGTH 256
 #endif
 
-/* É½¼¨¤Î¥¦¥§¥¤¥È(¥Ç¥Õ¥©¥ë¥ÈÃÍ) */
+/* ɽ���Υ�������(�ǥե������) */
 #ifdef VERSION_1_2
 #ifndef DISPLAY_WAIT
 #define DISPLAY_WAIT 0
@@ -129,7 +129,7 @@
 #endif /* VERSION_1_2 */
 
 /*
- *Predator¤ª¤è¤ÓPrey¤Î°ÌÃÖ¤òÉ½¤¹¹½Â¤ÂÎ
+ *Predator�����Prey�ΰ��֤�ɽ����¤��
  */
 typedef struct{
   int x;
@@ -140,10 +140,10 @@ typedef struct{
 #ifdef VERSION_1_2
 
 /* 
- * watch dog timerÍÑ¤Î¹½ÂÎ
+ * watch dog timer�Ѥι���
  */
 typedef struct{
-  pthread_mutex_t mutex; /* ÇÓÂ¾À©¸æÍÑ */
+  pthread_mutex_t mutex; /* ��¾������ */
   int count;             /* watch dog timer */
   int state;             /* watch dog state */
 }watchdog_t;
@@ -161,18 +161,18 @@ static watchdog_t wdtimer =
 #define WATCHDOG_RUN           1 /* WD status */
 #define WATCHDOG_STOP          0 /* WD status */
 
-pthread_t wd_tid;     /* Watch dog ¥¹¥ì¥Ã¥É¤Îthread ID */
-pthread_t player_tid; /* Prey/Predator ¥¹¥ì¥Ã¥É¤Îthread ID */
+pthread_t wd_tid;     /* Watch dog ����åɤ�thread ID */
+pthread_t player_tid; /* Prey/Predator ����åɤ�thread ID */
 
 #endif /* VERSION_1_2 */
 
 
 /*
- * ½é´ü¾õÂÖ¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤ÎÆÉ¤ß¹þ¤ß
+ * ������֥ǡ����ե�������ɤ߹���
  * int battleFieldArray[WORLD_SIZE][WORLD_SIZE]
- *      : ³Ê»ÒÀ¤³¦¤òÉ½¤¹WORLD_SIZE*WORLD_SIZE¤ÎÀ°¿ô·¿2¼¡¸µÇÛÎó
- * char *fileName: ³Ê»ÒÀ¤³¦¥Õ¥¡¥¤¥ëÌ¾¤¬³ÊÇ¼¤µ¤ì¤¿Ê¸»úÎó
- * ÊÖ¤êÃÍ:Àµ¾ï½ªÎ»¤Ê¤é0,°Û¾ï½ªÎ»¤Ê¤é1
+ *      : �ʻ�������ɽ��WORLD_SIZE*WORLD_SIZE��������2��������
+ * char *fileName: �ʻ������ե�����̾����Ǽ���줿ʸ����
+ * �֤���:���ｪλ�ʤ�0,�۾ｪλ�ʤ�1
  */
 int ReadInitConf(int battleFieldArray[WORLD_SIZE][WORLD_SIZE], char *fileName){
   FILE *fp;
@@ -180,7 +180,7 @@ int ReadInitConf(int battleFieldArray[WORLD_SIZE][WORLD_SIZE], char *fileName){
 
   fp = fopen(fileName, "r");
   if (fp == NULL){
-    /* ¥Õ¥¡¥¤¥ë¥ª¡¼¥×¥ó¥¨¥é¡¼ */
+    /* �ե����륪���ץ󥨥顼 */
     return(1);
   }
   else{
@@ -188,7 +188,7 @@ int ReadInitConf(int battleFieldArray[WORLD_SIZE][WORLD_SIZE], char *fileName){
       for (j = 0; j < WORLD_SIZE; j++){
 
 	if (EOF == fscanf(fp,"%d", &battleFieldArray[i][j])){
-	  /* ¥Õ¥¡¥¤¥ë¤ÎÄ¹¤µ¤¬ÁÛÄê¤·¤Æ¤¤¤¿¤è¤ê¤âÃ»¤¤¥¨¥é¡¼ */
+	  /* �ե������Ĺ�������ꤷ�Ƥ�������û�����顼 */
 	  return(1);
 	}
 
@@ -201,11 +201,11 @@ int ReadInitConf(int battleFieldArray[WORLD_SIZE][WORLD_SIZE], char *fileName){
 }
 
 /*
- * ³Ê»ÒÀ¤³¦¤òÉ½¼¨¤¹¤ë´Ø¿ô
+ * �ʻ�������ɽ������ؿ�
  * int battleFieldArray[WORLD_SIZE][WORLD_SIZE]
- *      : ³Ê»ÒÀ¤³¦¤òÉ½¤¹WORLD_SIZE*WORLD_SIZE¤ÎÀ°¿ô·¿2¼¡¸µÇÛÎó
- * int clockNum: ¸½ºß¤Î¥¯¥í¥Ã¥¯¿ô
- * ÊÖ¤êÃÍ:Àµ¾ï½ªÎ»¤Ê¤é0,°Û¾ï½ªÎ»¤Ê¤é1
+ *      : �ʻ�������ɽ��WORLD_SIZE*WORLD_SIZE��������2��������
+ * int clockNum: ���ߤΥ����å���
+ * �֤���:���ｪλ�ʤ�0,�۾ｪλ�ʤ�1
  */
 int PrintWorld(int battleFieldArray[WORLD_SIZE][WORLD_SIZE], int clockNum){
   int i, j;
@@ -215,10 +215,10 @@ int PrintWorld(int battleFieldArray[WORLD_SIZE][WORLD_SIZE], int clockNum){
     for (j = 0; j < WORLD_SIZE; j++){
 
       switch(battleFieldArray[i][j]){
-      case VALUE_OF_OBSTACLE: /* ¾ã³²Êª */
+      case VALUE_OF_OBSTACLE: /* �㳲ʪ */
 	printf ("#");
 	break;
-      case VALUE_OF_FREE: /* ¼«Í³³Ê»Ò */
+      case VALUE_OF_FREE: /* ��ͳ�ʻ� */
 	printf(".");
 	break;
       case VALUE_OF_PREDATOR: /* Predator */
@@ -227,7 +227,7 @@ int PrintWorld(int battleFieldArray[WORLD_SIZE][WORLD_SIZE], int clockNum){
       case VALUE_OF_PREY: /* Prey */
 	printf("*");
 	break;
-      default: /* ¤³¤³¤Ë¤ÏËÜÍèÅþÃ£¤·¤Ê¤¤¤Ï¤º */
+      default: /* �����ˤ�������ã���ʤ��Ϥ� */
 	fprintf(stderr, "%d\n",battleFieldArray[i][j]);
 	fprintf(stderr, "Execution Error!! \n");
 	return(1);
@@ -241,10 +241,10 @@ int PrintWorld(int battleFieldArray[WORLD_SIZE][WORLD_SIZE], int clockNum){
 }
 
 /*
- * Predator¤Î°ÌÃÖºÂÉ¸¤ò¼èÆÀ¤¹¤ë
+ * Predator�ΰ��ֺ�ɸ���������
  * int battleFieldArray[WORLD_SIZE][WORLD_SIZE]
- *      : ³Ê»ÒÀ¤³¦¤òÉ½¤¹WORLD_SIZE*WORLD_SIZE¤ÎÀ°¿ô·¿2¼¡¸µÇÛÎó
- * ÊÖ¤êÃÍ:Predator¤Î°ÌÃÖºÂÉ¸¤òÉ½¤¹pursuit_position¹½Â¤ÂÎ
+ *      : �ʻ�������ɽ��WORLD_SIZE*WORLD_SIZE��������2��������
+ * �֤���:Predator�ΰ��ֺ�ɸ��ɽ��pursuit_position��¤��
  */
 pursuit_position getPredatorPosition
 (int battleFieldArray[WORLD_SIZE][WORLD_SIZE]){
@@ -253,8 +253,8 @@ pursuit_position getPredatorPosition
   pursuit_position returnPosition;
 
   /*
-   * battleFieldArray¤Î¤Ê¤«¤Ç¡¢ÃÍ¤¬VALUE_OF_PREDATOR¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤È¤³¤í¤ò
-   * Ãµ¤·¤Æ¡¢¤½¤ÎºÂÉ¸¤òreturnPosition¤ËÂåÆþ¤·¤Æreturn¤¹¤ë
+   * battleFieldArray�Τʤ��ǡ��ͤ�VALUE_OF_PREDATOR�ˤʤäƤ���Ȥ�����
+   * õ���ơ����κ�ɸ��returnPosition����������return����
    */
   for (i=0; i<WORLD_SIZE; i++){
     for (j=0; j<WORLD_SIZE; j++){
@@ -267,8 +267,8 @@ pursuit_position getPredatorPosition
   }
 
   /*
-   * ¤³¤³¤Þ¤Ç½èÍý¤¬Íè¤ë¤È¤¤¤¦¤³¤È¤Ï°Û¾ï»öÂÖ¤Ê¤Î¤Ç¡¢position¤È¤·¤Æ
-   * (-1,-1)¤òÊÖ¤¹
+   * �����ޤǽ��������Ȥ������Ȥϰ۾���֤ʤΤǡ�position�Ȥ���
+   * (-1,-1)���֤�
    */
   returnPosition.x=-1;
   returnPosition.y=-1;
@@ -276,10 +276,10 @@ pursuit_position getPredatorPosition
 }
 
 /*
- * Prey¤Î°ÌÃÖºÂÉ¸¤ò¼èÆÀ¤¹¤ë
+ * Prey�ΰ��ֺ�ɸ���������
  * int battleFieldArray[WORLD_SIZE][WORLD_SIZE]
- *      : ³Ê»ÒÀ¤³¦¤òÉ½¤¹WORLD_SIZE*WORLD_SIZE¤ÎÀ°¿ô·¿2¼¡¸µÇÛÎó
- * ÊÖ¤êÃÍ:Prey¤Î°ÌÃÖºÂÉ¸¤òÉ½¤¹pursuit_position¹½Â¤ÂÎ
+ *      : �ʻ�������ɽ��WORLD_SIZE*WORLD_SIZE��������2��������
+ * �֤���:Prey�ΰ��ֺ�ɸ��ɽ��pursuit_position��¤��
  */
 pursuit_position getPreyPosition
 (int battleFieldArray[WORLD_SIZE][WORLD_SIZE]){
@@ -287,8 +287,8 @@ pursuit_position getPreyPosition
   int i,j;
   pursuit_position returnPosition;
   /*
-   * battleFieldArray¤Î¤Ê¤«¤Ç¡¢ÃÍ¤¬VALUE_OF_PREY¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤È¤³¤í¤ò
-   * Ãµ¤·¤Æ¡¢¤½¤ÎºÂÉ¸¤òreturnPosition¤ËÂåÆþ¤·¤Æreturn¤¹¤ë
+   * battleFieldArray�Τʤ��ǡ��ͤ�VALUE_OF_PREY�ˤʤäƤ���Ȥ�����
+   * õ���ơ����κ�ɸ��returnPosition����������return����
    */
   for (i=0; i<WORLD_SIZE; i++){
     for (j=0; j<WORLD_SIZE; j++){
@@ -301,8 +301,8 @@ pursuit_position getPreyPosition
   }
 
   /*
-   * ¤³¤³¤Þ¤Ç½èÍý¤¬Íè¤ë¤È¤¤¤¦¤³¤È¤Ï°Û¾ï»öÂÖ¤Ê¤Î¤Ç¡¢position¤È¤·¤Æ
-   * (-1,-1)¤òÊÖ¤¹
+   * �����ޤǽ��������Ȥ������Ȥϰ۾���֤ʤΤǡ�position�Ȥ���
+   * (-1,-1)���֤�
    */
   returnPosition.x=-1;
   returnPosition.y=-1;
@@ -311,30 +311,30 @@ pursuit_position getPreyPosition
 }
 
 /*
- * »ØÄê¤µ¤ì¤¿action¤Ë½¾¤Ã¤Æ¡¢ºÂÉ¸¤ò¹¹¿·¤¹¤ë
+ * ���ꤵ�줿action�˽��äơ���ɸ�򹹿�����
  * pursuit_position currentPosition: 
- * Predator¤Þ¤¿¤ÏPrey¤Î°ÌÃÖºÂÉ¸¤òÉ½¤¹pursuit_position¹½Â¤ÂÎ
- * int action: ¼¡¤Î¹ÔÆ°¤òÉ½¤¹Ê¸»ú(¤òint·¿¤ÇÉ½¤·¤¿¤â¤Î)
- * 'u','d','l','r','s'¤Î¤É¤ì¤«
- * ÊÖ¤êÃÍ:¹¹¿·¤µ¤ì¤¿°ÌÃÖºÂÉ¸¤òÉ½¤¹position¹½Â¤ÂÎ
+ * Predator�ޤ���Prey�ΰ��ֺ�ɸ��ɽ��pursuit_position��¤��
+ * int action: ���ι�ư��ɽ��ʸ��(��int����ɽ�������)
+ * 'u','d','l','r','s'�Τɤ줫
+ * �֤���:�������줿���ֺ�ɸ��ɽ��position��¤��
  */
 pursuit_position movePP(pursuit_position currentPosition, int action){
   switch(action){
-  case 'u': /* ¾å¤Ë°ÜÆ° */
+  case 'u': /* ��˰�ư */
     currentPosition.y=currentPosition.y-1;
     break;
-  case 'd': /* ²¼¤Ë°ÜÆ° */
+  case 'd': /* ���˰�ư */
     currentPosition.y=currentPosition.y+1;
     break;
-  case 'l': /* º¸¤Ë°ÜÆ° */
+  case 'l': /* ���˰�ư */
     currentPosition.x=currentPosition.x-1;
     break;
-  case 'r': /* ±¦¤Ë°ÜÆ° */
+  case 'r': /* ���˰�ư */
     currentPosition.x=currentPosition.x+1;
     break;
-  case 's': /* ¤½¤Î¾ì¤ËÎ±¤Þ¤ë */
+  case 's': /* ���ξ��α�ޤ� */
     break;
-  default:  /* »ØÄê³°¤ÎÊ¸»ú¤ò»ØÄê¤·¤¿¾ì¹ç¤Ï's'¤ÈÅù²Á¤È¤ß¤Ê¤¹ */
+  default:  /* ���곰��ʸ������ꤷ������'s'�������Ȥߤʤ� */
     break;
   }
 
@@ -343,21 +343,21 @@ pursuit_position movePP(pursuit_position currentPosition, int action){
 }
 
 /*
- * °ÜÆ°¤·¤¿ºÂÉ¸¤ÎÂÅÅöÀ­¤ò¸¡Æ¤¤¹¤ë
+ * ��ư������ɸ����������Ƥ����
  * pursuit_position currentPosition: 
- * Predator¤Þ¤¿¤ÏPrey¤Î°ÌÃÖºÂÉ¸¤òÉ½¤¹pursuit_position¹½Â¤ÂÎ
+ * Predator�ޤ���Prey�ΰ��ֺ�ɸ��ɽ��pursuit_position��¤��
  * int battleFieldArray[WORLD_SIZE][WORLD_SIZE]
- *      : ³Ê»ÒÀ¤³¦¤òÉ½¤¹WORLD_SIZE*WORLD_SIZE¤ÎÀ°¿ô·¿2¼¡¸µÇÛÎó
- * ÊÖ¤êÃÍ: ÂÅÅö¤Ê¤é¤ÐVALID(=1),¤½¤¦¤Ç¤Ê¤±¤ì¤ÐINVALID(=0)
+ *      : �ʻ�������ɽ��WORLD_SIZE*WORLD_SIZE��������2��������
+ * �֤���: �����ʤ��VALID(=1),�����Ǥʤ����INVALID(=0)
  */
 int evalPosition(pursuit_position currentPosition, 
 		 int battleFieldArray[WORLD_SIZE][WORLD_SIZE]){
   
   /* 
-   * ¤³¤³¤ÇÄ´¤Ù¤Æ¤¤¤ë¤Î¤Ï,
-   *   1. »ØÄê¤µ¤ì¤¿°ÌÃÖ¤¬¡¢WORLD_SIZE*WORLD_SIZE¤Î³Ê»ÒÀ¤³¦¤«¤é¤Ï¤ß½Ð¤·¤Æ
-   *      ¤¤¤Ê¤¤¤«¤É¤¦¤«
-   *   2. »ØÄê¤µ¤ì¤¿°ÌÃÖ¤Ë¾ã³²Êª¤¬Â¸ºß¤·¤Æ¤¤¤Ê¤¤¤«¤É¤¦¤«
+   * ������Ĵ�٤Ƥ���Τ�,
+   *   1. ���ꤵ�줿���֤���WORLD_SIZE*WORLD_SIZE�γʻ���������Ϥ߽Ф���
+   *      ���ʤ����ɤ���
+   *   2. ���ꤵ�줿���֤˾㳲ʪ��¸�ߤ��Ƥ��ʤ����ɤ���
    */
   if (currentPosition.x >=0 && currentPosition.x < WORLD_SIZE
       && currentPosition.y >= 0 && currentPosition.y < WORLD_SIZE
@@ -371,56 +371,56 @@ int evalPosition(pursuit_position currentPosition,
 }
 
 /*
- * ³Ê»ÒÀ¤³¦¤ò¹¹¿·¤¹¤ë
+ * �ʻ������򹹿�����
  * int battleFieldArray[WORLD_SIZE][WORLD_SIZE]
- *      : ³Ê»ÒÀ¤³¦¤òÉ½¤¹WORLD_SIZE*WORLD_SIZE¤ÎÀ°¿ô·¿2¼¡¸µÇÛÎó
- * int predatorAction: Predator¤Î¹ÔÆ°¤òÉ½¤¹Ê¸»ú(¤òint¤ÇÉ½¤·¤¿¤â¤Î)
- * ('u','d','l','r','s'¤Î¤É¤ì¤«)
- * int preyAction: prey¤Î¹ÔÆ°¤òÉ½¤¹Ê¸»ú(¤òint¤ÇÉ½¤·¤¿¤â¤Î)
- * ('u','d','l','r','s'¤Î¤É¤ì¤«)
- * ÊÖ¤êÃÍ: ³Ê»ÒÀ¤³¦¹¹¿·¤Î·ë²ÌPrey¤¬Êá³Í¤µ¤ì¤ì¤Ð1¡¢¤½¤¦¤Ç¤Ê¤±¤ì¤Ð0
+ *      : �ʻ�������ɽ��WORLD_SIZE*WORLD_SIZE��������2��������
+ * int predatorAction: Predator�ι�ư��ɽ��ʸ��(��int��ɽ�������)
+ * ('u','d','l','r','s'�Τɤ줫)
+ * int preyAction: prey�ι�ư��ɽ��ʸ��(��int��ɽ�������)
+ * ('u','d','l','r','s'�Τɤ줫)
+ * �֤���: �ʻ����������η��Prey����ͤ�����1�������Ǥʤ����0
  */
 int RenewWorld(int battleFieldArray[WORLD_SIZE][WORLD_SIZE],
 	       int predatorAction, int preyAction){
 
-  /* Predator¤ÈPrey¤Î°ÌÃÖºÂÉ¸¤òÉ½¤¹position¹½Â¤ÂÎ */
+  /* Predator��Prey�ΰ��ֺ�ɸ��ɽ��position��¤�� */
   pursuit_position predatorPosition, preyPosition;
   pursuit_position newPredatorPosition, newPreyPosition;
 
-  /* Predator¤ÈPrey¤Î¸½ºß°ÌÃÖ¤òÆÀ¤ë */
+  /* Predator��Prey�θ��߰��֤����� */
   predatorPosition = getPredatorPosition(battleFieldArray);
   preyPosition = getPreyPosition(battleFieldArray);
 
-  /* °ÜÆ°¸å¤ÎPredator¤ÈPrey¤ÎºÂÉ¸¤òÆÀ¤ë */
+  /* ��ư���Predator��Prey�κ�ɸ������ */
   newPredatorPosition = movePP(predatorPosition, predatorAction);
   newPreyPosition = movePP(preyPosition, preyAction);
 
-  /* battleFieldArray¤«¤é°ìÃ¶Predator¤ÈPrey¤òºï½ü */
+  /* battleFieldArray�����öPredator��Prey���� */
   battleFieldArray[predatorPosition.y][predatorPosition.x] = 0;  
   battleFieldArray[preyPosition.y][preyPosition.x] = 0;
 
-  /* ¤â¤·°ÜÆ°¸å¤ÎºÂÉ¸ÃÍ¤¬ÂÅÅö¤Ê¤é¤Ð */
+  /* �⤷��ư��κ�ɸ�ͤ������ʤ�� */
   if (evalPosition(newPredatorPosition,battleFieldArray) == VALID){
-    /* ¿·¤·¤¤ºÂÉ¸¤òpredatorPosition¤Ë¥³¥Ô¡¼ */
+    /* ��������ɸ��predatorPosition�˥��ԡ� */
     predatorPosition.x = newPredatorPosition.x;
     predatorPosition.y = newPredatorPosition.y;    
   }
 
-  /* ¤â¤·°ÜÆ°¸å¤ÎºÂÉ¸ÃÍ¤¬ÂÅÅö¤Ê¤é¤Ð */
+  /* �⤷��ư��κ�ɸ�ͤ������ʤ�� */
   if (evalPosition(newPreyPosition,battleFieldArray) == VALID){
-    /* ¿·¤·¤¤ºÂÉ¸¤òpreyPosition¤Ë¥³¥Ô¡¼ */    
+    /* ��������ɸ��preyPosition�˥��ԡ� */    
     preyPosition.x = newPreyPosition.x;
     preyPosition.y = newPreyPosition.y;
   }
 
   /*
-   * Prey(=VALUE_OF_PREY)¤ÈPredator(=VALUE_OF_PREDATOR)¤òºÆÇÛÃÖ¤¹¤ë 
-   * ¤³¤Î½çÈÖ¤Ê¤Î¤Ï¡¢Predator¤¬Prey¤Ë¾å½ñ¤­¤µ¤ì¤ë¤Î¤Ï¤ª¤«¤·¤¤¤¿¤á
+   * Prey(=VALUE_OF_PREY)��Predator(=VALUE_OF_PREDATOR)������֤��� 
+   * ���ν��֤ʤΤϡ�Predator��Prey�˾�񤭤����ΤϤ�����������
    */
   battleFieldArray[preyPosition.y][preyPosition.x] = VALUE_OF_PREY;
   battleFieldArray[predatorPosition.y][predatorPosition.x] = VALUE_OF_PREDATOR;
 
-  /* ½ªÎ»È½Äê */
+  /* ��λȽ�� */
   if (predatorPosition.x == preyPosition.x 
       && predatorPosition.y == preyPosition.y){
     return(1);
@@ -432,10 +432,10 @@ int RenewWorld(int battleFieldArray[WORLD_SIZE][WORLD_SIZE],
 }
 
 /*
- * ³Ê»ÒÀ¤³¦¤Î¥³¥Ô¡¼¤ò¹Ô¤¦
- * int copy[WORLD_SIZE][WORLD_SIZE]: ¥³¥Ô¡¼Àè
- * int original[WORLD_SIZE][WORLD_SIZE]: ¥³¥Ô¡¼¸µ
- * ÊÖ¤êÃÍ: 0
+ * �ʻ������Υ��ԡ���Ԥ�
+ * int copy[WORLD_SIZE][WORLD_SIZE]: ���ԡ���
+ * int original[WORLD_SIZE][WORLD_SIZE]: ���ԡ���
+ * �֤���: 0
  */
 int copyWorld(int copy[WORLD_SIZE][WORLD_SIZE], 
 	      int original[WORLD_SIZE][WORLD_SIZE]){
@@ -450,26 +450,26 @@ int copyWorld(int copy[WORLD_SIZE][WORLD_SIZE],
 }
 
 #ifdef VERSION_1_2 
-static int copy_array[WORLD_SIZE][WORLD_SIZE];     /* ³Ê»ÒÀ¤³¦(¥³¥Ô¡¼) */
+static int copy_array[WORLD_SIZE][WORLD_SIZE];     /* �ʻ�����(���ԡ�) */
 
 /*
- * Watch dog timer¹½Â¤ÂÎ¤Î½é´üÀßÄê(¥¹¥¿¡¼¥È)
+ * Watch dog timer��¤�Τν������(��������)
  */
 static void setWatchdogTimer(){
   int status;
 
-  /* ÇÓÂ¾À©¸æ»Ï¤Þ¤ê */
+  /* ��¾����Ϥޤ� */
   status=pthread_mutex_lock(&(wdtimer.mutex));
   if(status != 0){
     fprintf(stderr,"mutex lock fail!!\n");
     abort();
   }
   
-  /* ËÜÂÎ */
+  /* ���� */
   wdtimer.count = WATCHDOG_COUNT_INIT;
-  wdtimer.state = WATCHDOG_RUN; /* »þ´Ö¤Î´Æ»ë³«»Ï */
+  wdtimer.state = WATCHDOG_RUN; /* ���֤δƻ볫�� */
 
-  /* ÇÓÂ¾À©¸æ½ª¤ï¤ê */
+  /* ��¾���潪��� */
   status=pthread_mutex_unlock(&(wdtimer.mutex));
   if(status != 0){
     fprintf(stderr,"mutex unlock fail!!\n");
@@ -478,23 +478,23 @@ static void setWatchdogTimer(){
 }
 
 /*
- * Watch dog timer¤Î²ò½ü
- * 1ÉÃ¤ÎWaitÍÑ¤Ë¤â»ÈÍÑ
+ * Watch dog timer�β��
+ * 1�ä�Wait�Ѥˤ����
  */
 static void resetWatchdogTimer(){
   int status;
 
-  /* ÇÓÂ¾À©¸æ»Ï¤Þ¤ê */
+  /* ��¾����Ϥޤ� */
   status=pthread_mutex_lock(&(wdtimer.mutex));
   if(status != 0){
     fprintf(stderr,"mutex lock fail!!\n");
     abort();
   }
   
-  /* ËÜÂÎ */
-  wdtimer.state = WATCHDOG_STOP; /* »þ´Ö¤Î´Æ»ë½ªÎ» */
+  /* ���� */
+  wdtimer.state = WATCHDOG_STOP; /* ���֤δƻ뽪λ */
   
-  /* ÇÓÂ¾À©¸æ½ª¤ï¤ê */
+  /* ��¾���潪��� */
   status=pthread_mutex_unlock(&(wdtimer.mutex));
   if(status != 0){
     fprintf(stderr,"mutex unlock fail!!\n");
@@ -503,17 +503,17 @@ static void resetWatchdogTimer(){
 }
 
 /*
- * Watchdog timer¥¹¥ì¥Ã¥É¤ÎËÜÂÎ¡Ê´Ø¿ô)
- * void *arg:Prey/Predator¥¹¥ì¥Ã¥É¤Îthread ID¤Ø¤Î¥Ý¥¤¥ó¥¿
+ * Watchdog timer����åɤ����Ρʴؿ�)
+ * void *arg:Prey/Predator����åɤ�thread ID�ؤΥݥ���
  */
 static void *threadWatchdogTimer(void *arg){
   int status;
   pthread_t *tid = (pthread_t *) arg;
   int wdexit=0;
 
-  setWatchdogTimer(); /* watchdog_t¹½Â¤ÂÎ¤Î½é´ü²½ */
+  setWatchdogTimer(); /* watchdog_t��¤�Τν���� */
 
-  /* ÇÓÂ¾À©¸æ»Ï¤Þ¤ê */
+  /* ��¾����Ϥޤ� */
   while(1){
     status=pthread_mutex_lock(&(wdtimer.mutex));
     if(status != 0){
@@ -521,31 +521,31 @@ static void *threadWatchdogTimer(void *arg){
       abort();
     }
   
-    /* ËÜÂÎ */
+    /* ���� */
     if(wdtimer.count == 0){
       if(wdtimer.state == WATCHDOG_RUN){
-	/* »þ´ÖÆâ¤Ë½ª¤ï¤é¤Ê¤¤Prey/Predator¥¹¥ì¥Ã¥É¤ò¥­¥ã¥ó¥»¥ë¤¹¤ë */
+	/* ������˽����ʤ�Prey/Predator����åɤ򥭥�󥻥뤹�� */
 	status = pthread_cancel(*tid); 
       }
-      /* ¤³¤³¤Ï°ì»þ¥³¥á¥ó¥È¥¢¥¦¥È
+      /* �����ϰ�������ȥ�����
       if(status != 0){
 	fprintf(stderr,"pthread_cancel fail!!\n");
 	abort();
       }
       */
-      wdexit = 1; /* watchdog thread¤ò½ªÎ»¤¹¤ë¤¿¤á¤Î¥Õ¥é¥° */
+      wdexit = 1; /* watchdog thread��λ���뤿��Υե饰 */
     }
     else {
-      /* watch dog timer¤Î¥«¥¦¥ó¥¿¤ò1°ú¤¯ */
+      /* watch dog timer�Υ����󥿤�1���� */
       if(wdtimer.count>0){
 	wdtimer.count--;
       }
       else{
-	wdexit = 1; /* watchdog thread¤ò½ªÎ»¤¹¤ë¤¿¤á¤Î¥Õ¥é¥° */
+	wdexit = 1; /* watchdog thread��λ���뤿��Υե饰 */
       }
     }
 
-    /* ÇÓÂ¾À©¸æ½ª¤ï¤ê */
+    /* ��¾���潪��� */
     status=pthread_mutex_unlock(&(wdtimer.mutex));
     if(status != 0){
       fprintf(stderr,"mutex unlock fail!!\n");
@@ -553,7 +553,7 @@ static void *threadWatchdogTimer(void *arg){
     }
     if(wdexit)
       {	
-	/* watchdog thread¤ò½ªÎ»¤¹¤ë */
+	/* watchdog thread��λ���� */
 	pthread_exit(0);
       }
     usleep(WATCHDOG_INTERVAL);
@@ -561,8 +561,8 @@ static void *threadWatchdogTimer(void *arg){
 }
 
 /*
- * Prey ¥¹¥ì¥Ã¥É¤ÎËÜÂÎ¡Ê´Ø¿ô)
- * void *arg:³Ê»Ò¶õ´Ö¤Ø¤Î¥Ý¥¤¥ó¥¿¡Êint *)
+ * Prey ����åɤ����Ρʴؿ�)
+ * void *arg:�ʻҶ��֤ؤΥݥ��󥿡�int *)
  */
 static void *threadPrey(void *arg)
 {
@@ -571,7 +571,7 @@ static void *threadPrey(void *arg)
   int cancel_type;
   int status;
 
-  /* ÈóÆ±´ü¥­¥ã¥ó¥»¥ë¤ò²ÄÇ½¤Ë¤¹¤ë */
+  /* ��Ʊ������󥻥���ǽ�ˤ��� */
   status = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,
 				 &cancel_type);
   if(status != 0){
@@ -580,13 +580,13 @@ static void *threadPrey(void *arg)
   }
 
   Prey(ca, &Action);  
-  resetWatchdogTimer();  /* watchdog timer¤ò½ªÎ»¤¹¤ë */
-  pthread_exit(&Action); /* thread½ªÎ»»þ¤ÎÌá¤êÃÍ¤È¤·¤Æ¼¡¤ÎÆ°ºî¤òÊÖ¤¹ */
+  resetWatchdogTimer();  /* watchdog timer��λ���� */
+  pthread_exit(&Action); /* thread��λ��������ͤȤ��Ƽ���ư����֤� */
 }
 
 /*
- * Predator ¥¹¥ì¥Ã¥É¤ÎËÜÂÎ¡Ê´Ø¿ô)
- * void *arg:³Ê»Ò¶õ´Ö¤Ø¤Î¥Ý¥¤¥ó¥¿¡Êint *)
+ * Predator ����åɤ����Ρʴؿ�)
+ * void *arg:�ʻҶ��֤ؤΥݥ��󥿡�int *)
  */
 static void *threadPredator(void *arg)
 {
@@ -596,7 +596,7 @@ static void *threadPredator(void *arg)
   int status;
   int i,j;
 
-  /* ÈóÆ±´ü¥­¥ã¥ó¥»¥ë¤ò²ÄÇ½¤Ë¤¹¤ë */
+  /* ��Ʊ������󥻥���ǽ�ˤ��� */
   status = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,
 				 &cancel_type);
   if(status != 0){
@@ -607,89 +607,89 @@ static void *threadPredator(void *arg)
   /*  usleep(1100*1000);*/
   /* for(;;) */
   Predator(ca, &Action);
-  resetWatchdogTimer();  /* watchdog timer¤ò½ªÎ»¤¹¤ë */
-  pthread_exit(&Action); /* thread½ªÎ»»þ¤ÎÌá¤êÃÍ¤È¤·¤Æ¼¡¤ÎÆ°ºî¤òÊÖ¤¹ */
+  resetWatchdogTimer();  /* watchdog timer��λ���� */
+  pthread_exit(&Action); /* thread��λ��������ͤȤ��Ƽ���ư����֤� */
 }
 
 #endif /* VERSION_1_2 */
 /*
- * Pursuit Game¤Îmain´Ø¿ô
- * ÊÖ¤êÃÍ: Àµ¾ï½ªÎ»¤Ê¤é0,°Û¾ï½ªÎ»¤Ê¤é1
+ * Pursuit Game��main�ؿ�
+ * �֤���: ���ｪλ�ʤ�0,�۾ｪλ�ʤ�1
  */
 
 int main(int argc, char *argv[]){
   int i;
-  int array[WORLD_SIZE][WORLD_SIZE];          /* ³Ê»ÒÀ¤³¦(¥ª¥ê¥¸¥Ê¥ë) */
+  int array[WORLD_SIZE][WORLD_SIZE];          /* �ʻ�����(���ꥸ�ʥ�) */
 #ifndef VERSION_1_2
-  int copy_array[WORLD_SIZE][WORLD_SIZE];     /* ³Ê»ÒÀ¤³¦(¥³¥Ô¡¼) */
+  int copy_array[WORLD_SIZE][WORLD_SIZE];     /* �ʻ�����(���ԡ�) */
 #endif /* VERSION_1_2 */
-  int gameStepNum;                            /* ¥²¡¼¥à¤Î¥¹¥Æ¥Ã¥×¿ô */
-  int predatorAction, preyAction;             /* Predator¤äPrey¤ÎÆ°¤­¤òÉ½¤¹ */
+  int gameStepNum;                            /* ������Υ��ƥå׿� */
+  int predatorAction, preyAction;             /* Predator��Prey��ư����ɽ�� */
 
 #ifdef VERSION_1_2
-  int status;                                 /* pthread_*´Ø¿ô¤ÎÌá¤êÃÍÍÑ */
-  void *tret;                                 /* Prey/Predator¥¹¥ì¥Ã¥É½ªÎ»»þ¤ÎÌá¤êÃÍÍÑ */
+  int status;                                 /* pthread_*�ؿ���������� */
+  void *tret;                                 /* Prey/Predator����åɽ�λ����������� */
 #endif /* VERSION_1_2 */
 
-  /* °Ê²¼¤Ï¥ª¥×¥·¥ç¥ó»ØÄê¤Ë¤è¤êÊÑ¹¹¤µ¤ì¤ë²ÄÇ½À­¤Î¤¢¤ëÊÑ¿ô */
-  int gameStepNum_Max;                        /* ¥²¡¼¥à¤ÎºÇÂç¥¹¥Æ¥Ã¥×¿ô */
-  int displayWait;                            /* É½¼¨¹¹¿·´Ö³Ö(¥Þ¥¤¥¯¥íÉÃ) */
-  char worldFileName[WORLD_FILE_NAME_LENGTH]; /* ³Ê»ÒÀ¤³¦¥Õ¥¡¥¤¥ëÌ¾ */
+  /* �ʲ��ϥ��ץ�������ˤ���ѹ�������ǽ���Τ����ѿ� */
+  int gameStepNum_Max;                        /* ������κ��祹�ƥå׿� */
+  int displayWait;                            /* ɽ�������ֳ�(�ޥ�������) */
+  char worldFileName[WORLD_FILE_NAME_LENGTH]; /* �ʻ������ե�����̾ */
 
-  /* ÊÑ¿ô¤Î¥Ç¥Õ¥©¥ë¥ÈÃÍ¤òÀßÄê¤¹¤ë */
+  /* �ѿ��Υǥե�����ͤ����ꤹ�� */
   gameStepNum_Max = GAME_NUM;
   displayWait = DISPLAY_WAIT;
   strcpy(worldFileName, "battlefield.dat");
 
-  /* É¸½àÆþÎÏ¤«¤é¤Î¥Ñ¥é¥á¡¼¥¿½èÍý */
+  /* ɸ�����Ϥ���Υѥ�᡼������ */
   for (i=1; i<argc; i++){
-    /* "-s"(¥¹¥Æ¥Ã¥×¿ô»ØÄê)¥ª¥×¥·¥ç¥ó¤Î½èÍý */
-    if (strcmp(argv[i], "-s")==0){              /* "-s"¤¬¤¢¤Ã¤¿¤é */
-      if (i+1 < argc){                          /* ¤½¤Î¼¡¤ËÆþÎÏ¤¬¤¢¤ë¤«? */
-	if (atoi(argv[i+1]) > 0){               /* ÆþÎÏ¤µ¤ì¤¿ÃÍ¤ÏÂÅÅö? */
-	  gameStepNum_Max = atoi(argv[i+1]);    /* Á´¤ÆOK¤Î¤È¤­¤Î½èÍý */
+    /* "-s"(���ƥå׿�����)���ץ����ν��� */
+    if (strcmp(argv[i], "-s")==0){              /* "-s"�����ä��� */
+      if (i+1 < argc){                          /* ���μ������Ϥ����뤫? */
+	if (atoi(argv[i+1]) > 0){               /* ���Ϥ��줿�ͤ�����? */
+	  gameStepNum_Max = atoi(argv[i+1]);    /* ����OK�ΤȤ��ν��� */
 	  i++;
 	}
 	else{
 	  printf("Invalid input value!! Specify one positive number.\n");
-	  /* ÃÍ¤¬ÂÅÅö¤Ç¤Ê¤¤¾ì¹ç */
+	  /* �ͤ������Ǥʤ���� */
 	  return(1);
 	}
       }
       else{
-	/* ¥ª¥×¥·¥ç¥ó¤Î¼¡¤ËÆþÎÏ¤¬¤Ê¤¤¾ì¹ç */
+	/* ���ץ����μ������Ϥ��ʤ���� */
 	printf("Option error!! You must specify number of game step.\n");
 	return(1);
       }
     }
-    /* "-t"(É½¼¨´Ö³Ö»ØÄê)¥ª¥×¥·¥ç¥ó¤Î½èÍý */
-    else if(strcmp(argv[i], "-t")==0){         /* "-t"¤¬¤¢¤Ã¤¿¤é */
-      if (i+1 < argc){                         /* ¤½¤Î¼¡¤ËÆþÎÏ¤¬¤¢¤ë¤«? */
-	if (atoi(argv[i+1]) >= 0){              /* ÆþÎÏ¤µ¤ì¤¿ÃÍ¤ÏÂÅÅö¤«? */
-	  displayWait = atoi(argv[i+1]);       /* Á´¤ÆOK¤Î¤È¤­¤Î½èÍý */
+    /* "-t"(ɽ���ֳֻ���)���ץ����ν��� */
+    else if(strcmp(argv[i], "-t")==0){         /* "-t"�����ä��� */
+      if (i+1 < argc){                         /* ���μ������Ϥ����뤫? */
+	if (atoi(argv[i+1]) >= 0){              /* ���Ϥ��줿�ͤ�������? */
+	  displayWait = atoi(argv[i+1]);       /* ����OK�ΤȤ��ν��� */
 	  i++;
 	}
 	else{
 	  printf("Invalid input value!! Specify one positive number.\n");
-	  /* ÃÍ¤¬ÂÅÅö¤Ç¤Ê¤¤¾ì¹ç */
+	  /* �ͤ������Ǥʤ���� */
 	  return(1);
 	}
       }
       else{
-	/* ¥ª¥×¥·¥ç¥ó¤Î¼¡¤ËÆþÎÏ¤¬¤Ê¤¤¾ì¹ç */
+	/* ���ץ����μ������Ϥ��ʤ���� */
 	printf("Option error!! you must specify interval time of redraw.\n");
 	return(1);
       }
     }
-    /* "-w"(³Ê»ÒÀ¤³¦¥Õ¥¡¥¤¥ëÌ¾»ØÄê)¥ª¥×¥·¥ç¥ó¤Î½èÍý */
-    else if(strcmp(argv[i], "-w")==0){          /* "-w"¤¬¤¢¤Ã¤¿¤é */
-      if (i+1 < argc){                          /* ¤½¤Î¼¡¤ËÆþÎÏ¤¬¤¢¤ë¤«? */
-	/* Á´¤ÆOK¤Î¤È¤­¤Î½èÍý */
+    /* "-w"(�ʻ������ե�����̾����)���ץ����ν��� */
+    else if(strcmp(argv[i], "-w")==0){          /* "-w"�����ä��� */
+      if (i+1 < argc){                          /* ���μ������Ϥ����뤫? */
+	/* ����OK�ΤȤ��ν��� */
 	strncpy(worldFileName, argv[i+1], WORLD_FILE_NAME_LENGTH);
 	i++;
       }
       else{
-	/* ¥ª¥×¥·¥ç¥ó¤Î¼¡¤ËÆþÎÏ¤¬¤Ê¤¤¾ì¹ç */
+	/* ���ץ����μ������Ϥ��ʤ���� */
 	printf("Option error!! You must specify world file name.\n");
 	return(1);
       }
@@ -703,52 +703,52 @@ int main(int argc, char *argv[]){
     }
   }
 
-  /* BattleField¤ÎÆÉ¤ß¹þ¤ß */
+  /* BattleField���ɤ߹��� */
   if (ReadInitConf(array,worldFileName) == 1){
     fprintf(stderr,"File read failed!!\n");
     return(1);
   }
 
-  /* É½¼¨¤Î¥¯¥ê¥¢ */
+  /* ɽ���Υ��ꥢ */
   system("clear");
 
-  /* ½é´ü¾õÂÖ¤ÎÉ½¼¨ */
+  /* ������֤�ɽ�� */
   PrintWorld(array,0);
 
 #ifdef VERSION_1_2
-  /* ÊÂÎó¼Â¹Ô¤¹¤ë¥¹¥ì¥Ã¥É¿ô¤ò¥»¥Ã¥È¤¹¤ë */
+  /* ����¹Ԥ��륹��åɿ��򥻥åȤ��� */
   pthread_setconcurrency(3);
 #endif /* VERSION_1_2 */
 
-  /* ¥²¡¼¥à¥¹¥¿¡¼¥È */
+  /* �����ॹ������ */
   for (gameStepNum=1; gameStepNum<= gameStepNum_Max; gameStepNum++){
 
-#ifdef VERSION_1_2 /* »þ´Ö´Æ»ë¥Ð¡¼¥¸¥ç¥ó */
-    /* Predator¤Î¹ÔÆ° */
+#ifdef VERSION_1_2 /* ���ִƻ�С������ */
+    /* Predator�ι�ư */
     copyWorld(copy_array,array);
 
-    /* Predator thread¤òºî¤ë */
+    /* Predator thread���� */
     status = pthread_create(&player_tid, NULL, threadPredator, (void *)copy_array);
     if(status != 0){
       fprintf(stderr,"pthread_create fail!!: %s\n", strerror(status));
       abort();
     }
 
-    /* watch dog timer thread¤òºî¤ë */
+    /* watch dog timer thread���� */
     status = pthread_create(&wd_tid, NULL, threadWatchdogTimer, (void *)&player_tid);
     if(status != 0){
       fprintf(stderr,"pthread_create fail!!: %s\n", strerror(status));
       abort();
     }
 
-    /* Predator thread¤Î½ªÎ»¤òÂÔ¤Ä¡¥½ªÎ»Ìá¤êÃÍ¤Ïtret */
+    /* Predator thread�ν�λ���Ԥġ���λ����ͤ�tret */
     status = pthread_join(player_tid, &tret);
     if(status != 0){
       fprintf(stderr,"pthread_join fail!!: %s\n", strerror(status));
       abort();
     }
 
-    /* Predator thread¤¬¥­¥ã¥ó¥»¥ë¤µ¤ì¤¿¤«³ÎÇ§ */
+    /* Predator thread������󥻥뤵�줿����ǧ */
     if(tret == (void *)PTHREAD_CANCELED){
       predatorAction = 's';
     }
@@ -756,39 +756,39 @@ int main(int argc, char *argv[]){
       predatorAction = *((int *)tret);
     }
 
-    /* watch dog thread¤Î½ªÎ»¤òÂÔ¤Ä¡¥½ªÎ»Ìá¤êÃÍ¤Ïtret */
+    /* watch dog thread�ν�λ���Ԥġ���λ����ͤ�tret */
     status = pthread_join(wd_tid, &tret);
     if(status != 0){
       fprintf(stderr,"pthread_join fail!!: %s\n", strerror(status));
       abort();
     }
 
-    /* Prey¤Î¹ÔÆ°(2²óÆ°¤¤¤Æ1²óµÙ¤à) */
+    /* Prey�ι�ư(2��ư����1��٤�) */
     if (gameStepNum % 3 != 0){ 
       copyWorld(copy_array,array);
 
-      /* Prey thread¤òºî¤ë */
+      /* Prey thread���� */
       status = pthread_create(&player_tid, NULL, threadPrey, (void *)copy_array);
       if(status != 0){
 	fprintf(stderr,"pthread_create fail!!: %s\n", strerror(status));
 	abort();
       }
 
-      /* watch dog timer thread¤òºî¤ë */
+      /* watch dog timer thread���� */
       status = pthread_create(&wd_tid, NULL, threadWatchdogTimer, (void *)&player_tid);
       if(status != 0){
 	fprintf(stderr,"pthread_create fail!!: %s\n", strerror(status));
 	abort();
       }
 
-      /* Prey thread¤Î½ªÎ»¤òÂÔ¤Ä¡¥½ªÎ»Ìá¤êÃÍ¤Ïtret */
+      /* Prey thread�ν�λ���Ԥġ���λ����ͤ�tret */
       status = pthread_join(player_tid, &tret);
       if(status != 0){
 	fprintf(stderr,"pthread_join fail!!: %s\n", strerror(status));
 	abort();
       }
 
-      /* Prey thread¤¬¥­¥ã¥ó¥»¥ë¤µ¤ì¤¿¤«³ÎÇ§ */
+      /* Prey thread������󥻥뤵�줿����ǧ */
       if(tret == (void *)PTHREAD_CANCELED){
 	preyAction = 's';
       }
@@ -796,7 +796,7 @@ int main(int argc, char *argv[]){
 	preyAction = *((int *)tret);
       }
 
-      /* watch dog thread¤Î½ªÎ»¤òÂÔ¤Ä¡¥½ªÎ»Ìá¤êÃÍ¤Ïtret */
+      /* watch dog thread�ν�λ���Ԥġ���λ����ͤ�tret */
       status = pthread_join(wd_tid, &tret);
       if(status != 0){
 	fprintf(stderr,"pthread_join fail!!: %s\n", strerror(status));
@@ -809,11 +809,11 @@ int main(int argc, char *argv[]){
       usleep(WATCHDOG_COUNT_INIT*WATCHDOG_INTERVAL);
     }
 #else /* VERSION_1_2 */
-    /* Predator¤Î¹ÔÆ° */
+    /* Predator�ι�ư */
     copyWorld(copy_array,array);
     Predator(copy_array, &predatorAction);
 
-    /* Prey¤Î¹ÔÆ°(2²óÆ°¤¤¤Æ1²óµÙ¤à) */
+    /* Prey�ι�ư(2��ư����1��٤�) */
     if (gameStepNum % 3 != 0){
       copyWorld(copy_array,array);
       Prey(copy_array,&preyAction);      
@@ -823,18 +823,18 @@ int main(int argc, char *argv[]){
     }
 #endif /* VERSION_1_2 */
 
-    /* É½¼¨¤Î¥¦¥§¥¤¥È */
+    /* ɽ���Υ������� */
     usleep(displayWait);
 
     /*
-     * ¤½¤ì¤¾¤ì¤Î¹ÔÆ°¤Ë¹ç¤ï¤»¤Æ³Ê»ÒÀ¤³¦¤ò¹¹¿·
-     * RenewWorld¤Îµ¢¤êÃÍ¤¬0¤Ê¤é¤Ð·ÑÂ³
+     * ���줾��ι�ư�˹�碌�Ƴʻ������򹹿�
+     * RenewWorld�ε����ͤ�0�ʤ�з�³
      */
     if (RenewWorld(array,predatorAction, preyAction) == 0){
       system("clear");
       PrintWorld(array, gameStepNum);
     }
-    /* ¤½¤¦¤Ç¤Ê¤±¤ì¤Ð(1¤Ê¤é¤Ð)½ªÎ» */
+    /* �����Ǥʤ����(1�ʤ��)��λ */
     else{
       system("clear");
       PrintWorld(array, gameStepNum);      
@@ -844,7 +844,7 @@ int main(int argc, char *argv[]){
 
   } 
 
-  /* Prey¤¬ºÇ¸å¤Þ¤ÇÆ¨¤²ÀÚ¤Ã¤¿¤È¤­¤Î¥á¥Ã¥»¡¼¥¸½ÐÎÏ */
+  /* Prey���Ǹ�ޤ�ƨ���ڤä��Ȥ��Υ�å��������� */
   printf("Game Over!! Winner Prey!!\n");
   return(0);
 }
