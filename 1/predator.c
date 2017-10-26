@@ -103,67 +103,58 @@ predator_position *predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_po
   worldAstar[from.x][from.y].cost = 0;
   worldAstar[from.x][from.y].heuristic = predatorGetDistance(from, to);
   predatorAstar *parent = &worldAstar[from.x][from.y];
-  int flag = 1;
-  while(flag)
+  //printf("root %d:%d\n",parent->pos.x,parent->pos.y);
+  while(1)
   {
-    predator_position parent_pos = parent->pos;
-
-    //printf("%d:%d\n",parent_pos.x,parent_pos.y);
-
+    if(parent->status != OPEN)
+      {
+        printf("おかしい\n");
+        break;
+      }
     //hereがオープン先
     //上
-    if(parent_pos.y > 0)
+    if(parent->pos.y > 0)
     {
-      here = parent_pos;
+      here = parent->pos;
       here.y -= 1;
-      if(world[here.x][here.y] != VALUE_OF_OBSTACLE && worldAstar[here.x][here.y].status != OPEN) 
+      if(world[here.x][here.y] != VALUE_OF_OBSTACLE && worldAstar[here.x][here.y].status == NONE) 
       {
-        worldAstar[here.x][here.y].status = OPEN;
-        worldAstar[here.x][here.y].parent = parent;
-        worldAstar[here.x][here.y].cost = parent->cost + 1;
-        worldAstar[here.x][here.y].heuristic = predatorGetDistance(here, to);
+        predatorOpen(&worldAstar[here.x][here.y], parent, to);
       }
     }
     //下
-    if(parent_pos.y < WORLD_SIZE-1)
+    if(parent->pos.y < WORLD_SIZE-1)
     {
-      here = parent_pos;
+      here = parent->pos;
       here.y += 1;
-      if(world[here.x][here.y] != VALUE_OF_OBSTACLE && worldAstar[here.x][here.y].status != OPEN) 
+      if(world[here.x][here.y] != VALUE_OF_OBSTACLE && worldAstar[here.x][here.y].status == NONE) 
       {
-        worldAstar[here.x][here.y].status = OPEN;
-        worldAstar[here.x][here.y].parent = parent;
-        worldAstar[here.x][here.y].cost = parent->cost + 1;
-        worldAstar[here.x][here.y].heuristic = predatorGetDistance(here, to);
+        predatorOpen(&worldAstar[here.x][here.y], parent, to);
       }
     }
     //左
-    if(parent_pos.x > 0)
+    if(parent->pos.x > 0)
     {
-      here = parent_pos;
+      here = parent->pos;
       here.x -= 1;
-      if(world[here.x][here.y] != VALUE_OF_OBSTACLE && worldAstar[here.x][here.y].status != OPEN) 
+      if(world[here.x][here.y] != VALUE_OF_OBSTACLE && worldAstar[here.x][here.y].status == NONE) 
       {
-        worldAstar[here.x][here.y].status = OPEN;
-        worldAstar[here.x][here.y].parent = parent;
-        worldAstar[here.x][here.y].cost = parent->cost + 1;
-        worldAstar[here.x][here.y].heuristic = predatorGetDistance(here, to);
+        predatorOpen(&worldAstar[here.x][here.y], parent, to);
       }
     }
     //右
-    if(parent_pos.y < WORLD_SIZE-1)
+    if(parent->pos.x < WORLD_SIZE-1)
     {
-      here = parent_pos;
-      here.y += 1;
-      if(world[here.x][here.y] != VALUE_OF_OBSTACLE && worldAstar[here.x][here.y].status != OPEN) 
+      here = parent->pos;
+      here.x += 1;
+      if(world[here.x][here.y] != VALUE_OF_OBSTACLE && worldAstar[here.x][here.y].status == NONE) 
       {
-        worldAstar[here.x][here.y].status = OPEN;
-        worldAstar[here.x][here.y].parent = parent;
-        worldAstar[here.x][here.y].cost = parent->cost + 1;
-        worldAstar[here.x][here.y].heuristic = predatorGetDistance(here, to);
+        predatorOpen(&worldAstar[here.x][here.y], parent, to);
       }
     }
     parent->status = CLOSED;
+
+    if(worldAstar[to.x][to.y].status == OPEN)break;
 
     int min = 9999;
     int min_x;
@@ -175,17 +166,21 @@ predator_position *predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_po
       {
         if(worldAstar[i][j].status == OPEN)
         {
-          if(min > predatorGetScore(worldAstar[i][j]))
+          //printf("%d,%d\n",i,j);
+          int score = predatorGetScore(worldAstar[i][j]);
+          if(min > score)
           {
-            min = predatorGetScore(worldAstar[i][j]);
+            min = score;
             min_x = i;
             min_y = j;
-            printf("%d\n",min);
-          }
-          if(i == to.x && j == to.y)
+            //printf("min:%d\n",min);
+          }else if(min == score)
           {
-            flag = 0;
-            break;
+            if(worldAstar[min_x][min_y].cost > worldAstar[i][j].cost)
+            {
+              min_x = i;
+              min_y = j;
+            }
           }
         }
       }
@@ -194,9 +189,11 @@ predator_position *predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_po
     parent = &worldAstar[min_x][min_y];
   }
 
+  //printf("抜けた");
+
   here = to;
   predator_position *root;
-  root = (predator_position *)malloc(worldAstar[to.x][to.y].cost * sizeof(predator_position));
+  root = (predator_position *)malloc((worldAstar[to.x][to.y].cost+1) * sizeof(predator_position));
   while(1)
   {
     //printf("%d:%d\n",here.x,here.y);
@@ -229,10 +226,13 @@ void Predator(int world[WORLD_SIZE][WORLD_SIZE], int *action)
       }
     }
   }
+  printf("prey %d:%d\n", prey.x, prey.y);
+  printf("predator %d:%d\n", predator.x, predator.y);
   root = predatorSearch(world, predator, prey);
-  if(predator.x == root[1].x)
+  printf("root[1]: %d:%d",root[1].x,root[1].y);
+  if(predator.y == root[1].y)
   {
-    if(predator.y - root[1].y < 0)
+    if(predator.x - root[1].x > 0)
     {
       *action = 'u';
     }else
@@ -240,9 +240,9 @@ void Predator(int world[WORLD_SIZE][WORLD_SIZE], int *action)
       *action = 'd';
     }
   }
-  if(predator.y == root[1].y) 
+  if(predator.x == root[1].x) 
   {
-    if(predator.x - root[1].x < 0)
+    if(predator.y - root[1].y > 0)
     {
       *action = 'l';
     }else
