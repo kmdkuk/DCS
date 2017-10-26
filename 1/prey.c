@@ -250,14 +250,14 @@ void Prey(int world[WORLD_SIZE][WORLD_SIZE], int *action)
   int max_index;
   for(int i = 0;i < 4;i++)
   {
-    printf("root[%d])=%d\n", i, root[i]);
+    //printf("root[%d])=%d\n", i, root[i]);
     if(max < root[i])
     {
       max = root[i];
       max_index = i;
     }
   }
-  printf("max:%d\n",max_index);
+  //printf("max:%d\n",max_index);
 
   switch(max_index)
   {
