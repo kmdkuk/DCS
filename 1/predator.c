@@ -64,11 +64,19 @@ typedef struct __predatorAstar
   struct __predatorAstar *parent;
 } predatorAstar;
 
+/*
+  Function:     predatorGetScore(predatorAstar it)
+  Description:  itのA*で使うF値(現在地までの距離とゴールまでの推定値の和)を返す。
+*/
 int predatorGetScore(predatorAstar it)
 {
   return it.cost + it.heuristic;
 }
 
+/*
+  Function:   predatorGetDistance(predator_position from, predator_position to)
+  Description: A*探索に使うヒューリスティック関数としてマンハッタン距離を返す。
+*/
 int predatorGetDistance(predator_position from, predator_position to)
 {
   int result = 0;
@@ -76,6 +84,10 @@ int predatorGetDistance(predator_position from, predator_position to)
   return result;
 }
 
+/*
+  Function:   predatorOpen(predatorAstar *toopen, predatorAstar *parent, predator_position to)
+  Descripion: フィールドのステータスをOPENにするための関数
+*/
 void predatorOpen(predatorAstar *toopen, predatorAstar *parent, predator_position to)
 {
   toopen->status = OPEN;
@@ -84,6 +96,10 @@ void predatorOpen(predatorAstar *toopen, predatorAstar *parent, predator_positio
   toopen->heuristic = predatorGetDistance(toopen->pos, to);
 }
 
+/*
+  Function:   *predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_position from, predator_position to)
+  Description:  A*探索をして、最短距離のルートを入れた配列のポインタを返す。
+*/
 predator_position *predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_position from, predator_position to)
 {
   predatorAstar worldAstar[WORLD_SIZE][WORLD_SIZE];
@@ -107,10 +123,10 @@ predator_position *predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_po
   while(1)
   {
     if(parent->status != OPEN)
-      {
-        printf("おかしい\n");
-        break;
-      }
+    {
+      printf("おかしい\n");
+      break;
+    }
     //hereがオープン先
     //上
     if(parent->pos.y > 0)
@@ -205,8 +221,13 @@ predator_position *predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_po
   return root;
 }
 
+/*
+  Function:   Predator(int world[WORLD_SIZE][WORLD_SIZE], int *action)
+  Description:worldからPredatorの行動を決定する関数
+*/
 void Predator(int world[WORLD_SIZE][WORLD_SIZE], int *action)
 {
+  //初期化
   predator_position *root;
   predator_position prey;
   predator_position predator;
@@ -226,6 +247,8 @@ void Predator(int world[WORLD_SIZE][WORLD_SIZE], int *action)
       }
     }
   }
+
+  //最短ルートをたどる
   //printf("prey %d:%d\n", prey.x, prey.y);
   //printf("predator %d:%d\n", predator.x, predator.y);
   root = predatorSearch(world, predator, prey);
