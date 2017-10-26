@@ -226,10 +226,10 @@ void Predator(int world[WORLD_SIZE][WORLD_SIZE], int *action)
       }
     }
   }
-  printf("prey %d:%d\n", prey.x, prey.y);
-  printf("predator %d:%d\n", predator.x, predator.y);
+  //printf("prey %d:%d\n", prey.x, prey.y);
+  //printf("predator %d:%d\n", predator.x, predator.y);
   root = predatorSearch(world, predator, prey);
-  printf("root[1]: %d:%d",root[1].x,root[1].y);
+  //printf("root[1]: %d:%d",root[1].x,root[1].y);
   if(predator.y == root[1].y)
   {
     if(predator.x - root[1].x > 0)
