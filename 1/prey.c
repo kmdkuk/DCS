@@ -84,7 +84,7 @@ void preyOpen(preyAstar *toopen, preyAstar *parent, prey_position to)
   toopen->heuristic = preyGetDistance(toopen->pos, to);
 }
 
-prey_position *preySearch(int world[WORLD_SIZE][WORLD_SIZE], prey_position from, prey_position to)
+int preySearch(int world[WORLD_SIZE][WORLD_SIZE], prey_position from, prey_position to)
 {
   preyAstar worldAstar[WORLD_SIZE][WORLD_SIZE];
   prey_position here;
@@ -189,26 +189,14 @@ prey_position *preySearch(int world[WORLD_SIZE][WORLD_SIZE], prey_position from,
     parent = &worldAstar[min_x][min_y];
   }
 
-  //printf("抜けた");
-
-  here = to;
-  prey_position *root;
-  root = (prey_position *)malloc((worldAstar[to.x][to.y].cost+1) * sizeof(prey_position));
-  while(1)
-  {
-    //printf("%d:%d\n",here.x,here.y);
-    root[worldAstar[here.x][here.y].cost] = here;
-    here = worldAstar[here.x][here.y].parent->pos;
-    if(here.x == from.x && here.y == from.y)break;
-  }
-
-  return root;
+  return worldAstar[to.x][to.y].cost;
 }
 
 void Prey(int world[WORLD_SIZE][WORLD_SIZE], int *action)
 {
-  prey_position *root;
-  prey_position prey;
+  int root[4];
+  for(int i = 0;i < 4;i++)root[i] = 0;
+  prey_position prey, prey_tmp;
   prey_position predator;
   for(int i = 0;i < WORLD_SIZE;i++)
   {
@@ -226,29 +214,64 @@ void Prey(int world[WORLD_SIZE][WORLD_SIZE], int *action)
       }
     }
   }
-  //printf("prey %d:%d\n", prey.x, prey.y);
-  //printf("predator %d:%d\n", predator.x, predator.y);
-  root = preySearch(world, prey, predator);
-  //printf("root[1]: %d:%d",root[1].x,root[1].y);
-  if(predator.y == root[1].y)
+  //上
+  if(prey.x > 0 && world[prey.x-1][prey.y] == VALUE_OF_FREE)
   {
-    if(predator.x - root[1].x < 0)
+    prey_tmp = prey;
+    prey_tmp.x -= 1;
+    root[0] = preySearch(world, prey_tmp, predator);
+  }
+  
+  //下
+  if(prey.x < WORLD_SIZE-1 && world[prey.x+1][prey.y] == VALUE_OF_FREE)
+  {
+    prey_tmp = prey;
+    prey_tmp.x += 1;
+    root[1] = preySearch(world, prey_tmp, predator);
+  }
+  
+  //左
+  if(prey.y > 0 && world[prey.x][prey.y-1] == VALUE_OF_FREE)
+  {
+    prey_tmp = prey;
+    prey_tmp.y -= 1;
+    root[2] = preySearch(world, prey_tmp, predator);
+  }
+  
+  //右
+  if(prey.y < WORLD_SIZE-1 && world[prey.x][prey.y+1] == VALUE_OF_FREE)
+  {
+    prey_tmp = prey;
+    prey_tmp.y += 1;
+    root[3] = preySearch(world, prey_tmp, predator);
+  }
+
+  int max = 0;
+  int max_index;
+  for(int i = 0;i < 4;i++)
+  {
+    printf("root[%d])=%d\n", i, root[i]);
+    if(max < root[i])
     {
+      max = root[i];
+      max_index = i;
+    }
+  }
+  printf("max:%d\n",max_index);
+
+  switch(max_index)
+  {
+    case 0:
       *action = 'u';
-    }else
-    {
+      break;
+    case 1:
       *action = 'd';
-    }
-  }
-  if(predator.x == root[1].x) 
-  {
-    if(predator.y - root[1].y < 0)
-    {
+      break;
+    case 2:
       *action = 'l';
-    }else
-    {
+      break;
+    case 3:
       *action = 'r';
-    }
+      break;
   }
-  free(root);
 }
