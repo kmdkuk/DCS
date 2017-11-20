@@ -1,57 +1,57 @@
-#-*- coding: itf-8 -*-
+#-*- coding: utf-8 -*-
 # DCS Lab2 Read Me First
 #
 # Ei-Ichi Osawa
 #
 
 
-[$B%U%!%$%k$N@bL@(B]
+[ファイルの説明]
 
-$B$3$N%G%#%l%/%H%j$K$O0J2<$N%U%!%$%k$,4^$^$l$F$$$k!%(B
+このディレクトリには以下のファイルが含まれている．
 
-1. READ_ME_FIRST: $B$3$N%U%!%$%k<+?H!%$3$N%G%#%l%/%H%j$K4^$^$l$F$$$k%U%!(B
-	$B%$%k$N;H$$J}$K4X$9$k@bL@!%(B
+1. READ_ME_FIRST: このファイル自身．このディレクトリに含まれているファ
+	イルの使い方に関する説明．
 
-2. master.c: main$B4X?t$r4^$`7+$jJV$7<|?M$N%8%l%s%^%2!<%`$N4IM}%W%m%0%i%`!%(B
-	$B%U%!%$%k$N@hF,$NJ}$G(B #define DEBUG $B$H$7$F$*$/$H!$%2!<%`$NESCf(B
-	$B7P2a$K4X$9$k$$$m$$$m$J>pJs$,=PNO$5$l$k!%6qB>E*$K$O(B master.c $B$r(B
-	$BFI$a$P$o$+$k!%(B
+2. master.c: main関数を含む繰り返し囚人のジレンマゲームの管理プログラム．
+	ファイルの先頭の方で #define DEBUG としておくと，ゲームの途中
+	経過に関するいろいろな情報が出力される．具他的には master.c を
+	読めばわかる．
 
-	$B$3$N%W%m%0%i%`$H%j%s%/$7$F%3%s%Q%$%k$5$l$?%*%V%8%'%/%H(B($B<B9T2D(B
-	$BG=7A<0!$%m!<%I%b%8%e!<%k(B)$B$O!$5/F0;~$K%3%^%s%I%i%$%s$G0J2<$N%*(B
-	$B%W%7%g%s$r<u$1IU$1$k!%2>$K@8@.$7$?%*%V%8%'%/%HL>$r(B run $B$H$9$k!%(B
+	このプログラムとリンクしてコンパイルされたオブジェクト(実行可
+	能形式，ロードモジュール)は，起動時にコマンドラインで以下のオ
+	プションを受け付ける．仮に生成したオブジェクト名を run とする．
 
 	%run [-s maxGameStep] 
 
-	($B%*%W%7%g%s$N@bL@(B)
+	(オプションの説明)
 
-	-s	$B%2!<%`$N7+$jJV$72s?t(B
-		$B$3$N%*%W%7%g%s;X<(;R$N8e$KM?$($i$l$?(B10,000$B0J2<$N@5$N@0(B
-	        $B?t$r%2!<%`$N7+$jJV$72s?t$K%;%C%H$9$k!%%*%W%7%g%s$,M?$((B
-		$B$i$l$J$+$C$?>l9g$O!$%G%#%U%)%k%H$G(B200$B2s$K@_Dj$9$k!%(B
+	-s	ゲームの繰り返し回数
+		このオプション指示子の後に与えられた10,000以下の正の整
+	        数をゲームの繰り返し回数にセットする．オプションが与え
+		られなかった場合は，ディフォルトで200回に設定する．
 
-3. player1.o: Player1$B4X?t$r4^$`%W%l%$%d%W%m%0%i%`$N%*%V%8%'%/%H(B($B%j%m(B
-	$B%1!<%?%V%k%b%8%e!<%k(B)$B!%0J2<$G$O!V%F%9%HMQ(Bplayer1.o$B!W$H8F$V!%(B
+3. player1.o: Player1関数を含むプレイヤプログラムのオブジェクト(リロ
+	ケータブルモジュール)．以下では「テスト用player1.o」と呼ぶ．
 
-4. player2.o: Player2$B4X?t$r4^$`%W%l%$%d%W%m%0%i%`$N%*%V%8%'%/%H(B($B%j%m(B
-        $B%1!<%?%V%k%b%8%e!<%k(B)$B!%0J2<$G$O!V%F%9%HMQ(Bplayer2.o$B!W$H8F$V!%(B
+4. player2.o: Player2関数を含むプレイヤプログラムのオブジェクト(リロ
+        ケータブルモジュール)．以下では「テスト用player2.o」と呼ぶ．
 
-[$B%U%!%$%k$N;H$$J}(B]
+[ファイルの使い方]
 
-$B<+J,$G:n@.$7$?(B player1.c $B$H%2!<%`4IM}%W%m%0%i%`(Bmaster.c $B$*$h$S(B $B%F%9%H(B
-$BMQ(Bplayer2.o $B$r%3%s%Q%$%k$7$F!$Nc$($P(B run $B$H$$$&L>A0$N%*%V%8%'%/%H(B($B<B9T(B
-$B2DG=7A<0(B)$B$r@8@.$7$?$$>l9g$O0J2<$N$h$&$K$9$k!%%U%!%$%k$N=gHV$OG$0U$G$"$k!%(B
+自分で作成した player1.c とゲーム管理プログラムmaster.c および テスト
+用player2.o をコンパイルして，例えば run という名前のオブジェクト(実行
+可能形式)を生成したい場合は以下のようにする．ファイルの順番は任意である．
 
 %gcc -o run /FUN/Work/DCS/2017/resource/2/master.c  player1.c /FUN/Work/DCS/2017/resource/2/player2.o 
 
-$B%F%9%HMQ%W%m%0%i%`$N%*%V%8%'%/%H$r<+J,$N%G%#%l%/%H%j$K%3%T!<$7$F$b(B 
-$B$h$$!%$=$N>l9g$O!$>e5-$NNc$G@dBP%Q%9$N;XDj$r$O$:$;$P$h$$!%(B
+テスト用プログラムのオブジェクトを自分のディレクトリにコピーしても 
+よい．その場合は，上記の例で絶対パスの指定をはずせばよい．
 
-$B$5$i$K!$<+J,$N:n@.$7$?(B master.c  $B$*$h$S(B player1.c $B$H%F%9%HMQ$N(B 
-player2.o  $B$r%3%s%Q%$%k$7$F(B run $B$H$$$&L>A0$N%*%V%8%'%/%H(B($B<B9T2DG=7A<0(B)
-$B$r@8@.$7$?$$>l9g$O0J2<$N$h$&$K$9$k!%F1MM$K%U%!%$%k$N=gHV$OG$0U$G$"$k!%(B 
+さらに，自分の作成した master.c  および player1.c とテスト用の 
+player2.o  をコンパイルして run という名前のオブジェクト(実行可能形式)
+を生成したい場合は以下のようにする．同様にファイルの順番は任意である． 
 
 %gcc -o run master.c  player1.c /FUN/Work/DCS/2017/resource/2/player2.o
 
-($B0J>e(B)
+(以上)
 

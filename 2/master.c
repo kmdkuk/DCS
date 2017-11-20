@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Master Program for Iterative Prisoner's Dilemma Game (for Solaris)
  * version 1.0
  *
@@ -10,7 +10,7 @@
 
 #define VERSION_1_0 1
 
-/*
+/*:w
  * Load libralies (stdio.h, stdlib.h, time.h)
  *
  */
@@ -38,21 +38,21 @@
 #define DECEPTION 0
 #endif
 
-/* $B%2!<%`2s?t(B($B%G%#%U%)%k%HCM(B) */
+/* ゲーム回数(ディフォルト値) */
 
 #ifndef NUM_OF_GAME
 #define NUM_OF_GAME 200
 #endif
 
-/* $B%(%i!<$r7hDj$9$kogCM$N@_Dj(B */
+/* エラーを決定する閾値の設定 */
 
 #ifndef ERROR
 #define ERROR 5 
 #endif
 
 /*
- * $B3F%W%l%$%d$NMxF@7W;;(B
- * $BJV$jCM(B: $B$J$7(B
+ * 各プレイヤの利得計算
+ * 返り値: なし
  */
 
 void payoff(int strtgy1, int strtgy2, int *payoff1, int *payoff2) {
@@ -93,25 +93,25 @@ void payoff(int strtgy1, int strtgy2, int *payoff1, int *payoff2) {
 }
 
 /*
- * Game Master $B$N(B main $B4X?t(B
- * $BJV$jCM(B: $B@5>o$J$i(B 0, $B0J>e$J$i(B -1
+ * Game Master の main 関数
+ * 返り値: 正常なら 0, 以上なら -1
  */
 
 int main(int argc, char *argv[]) {
   int i, random, error_count1 = 0, error_count2 = 0;
   time_t t;
-  int score1 = 0, score2 = 0;  /*$B3F%W%l%$%d$NAmF@E@(B */
-  int payoff1, payoff2;   /*$B3F%W%l%$%d$N3F2s$N%2!<%`$NF@E@(B */
-  int gameStepNum;  /* $B%2!<%`$N8=:_$N2s?t(B */
-  int prevStrtgy1 = -1,  prevStrtgy2 = -1; /*$B3F%W%l%$%d$NA02s$N@oN,(B */
-  int currentStrtgy1, currentStrtgy2; /*$B3F%W%l%$%d$N:#2s$N@oN,(B */
+  int score1 = 0, score2 = 0;  /*各プレイヤの総得点 */
+  int payoff1, payoff2;   /*各プレイヤの各回のゲームの得点 */
+  int gameStepNum;  /* ゲームの現在の回数 */
+  int prevStrtgy1 = -1,  prevStrtgy2 = -1; /*各プレイヤの前回の戦略 */
+  int currentStrtgy1, currentStrtgy2; /*各プレイヤの今回の戦略 */
 
-  /* $B0J2<$O%*%W%7%g%s;XDj$K$h$jJQ99$5$l$k2DG=@-$N$"$kJQ?t(B */
-  int gameStepNum_Max = NUM_OF_GAME; /* $B%2!<%`$N:GBg%9%F%C%W?t(B */
+  /* 以下はオプション指定により変更される可能性のある変数 */
+  int gameStepNum_Max = NUM_OF_GAME; /* ゲームの最大ステップ数 */
 
-  /*$BI8=`F~NO$+$i$N%Q%i%a!<%?=hM}(B */
+  /*標準入力からのパラメータ処理 */
   for (i=1; i < argc; i++) {
-    /* "-s" $BBP@o2s?t%*%W%7%g%s$N=hM}(B */
+    /* "-s" 対戦回数オプションの処理 */
     if(strcmp(argv[i], "-s")==0) {
       if (i+1 < argc) {
 	gameStepNum_Max = atoi(argv[i+1]);
@@ -119,11 +119,11 @@ int main(int argc, char *argv[]) {
 	  i++;
 	} else {
 	  printf("Invalid input value!! Specify one positive number no more than 10000.\n");
-	  /* $BCM$,BEEv$G$J$$>l9g(B*/
+	  /* 値が妥当でない場合*/
 	  return(1);
 	}
       } else {
-	/* $B%*%W%7%g%s$N<!$KF~NO%Q%i%a!<%?$,$J$$>l9g(B */
+	/* オプションの次に入力パラメータがない場合 */
 	printf("Option error!! You must specify number of games.\n");
 	return (1);
       }
@@ -134,24 +134,24 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  /* $B;~4V$K0MB8$7$?Mp?t$N%7!<%I$N@_Dj(B */
+  /* 時間に依存した乱数のシードの設定 */
   srand((unsigned) time(&t));
 
-   /* $B%2!<%`%9%?!<%H(B */
+   /* ゲームスタート */
 
    for (gameStepNum=1; gameStepNum <= gameStepNum_Max; gameStepNum++) {
 
      currentStrtgy1 = -1;
      currentStrtgy2 = -1;     
 
-     /* $B3F%W%l%$%d$N@oN,7hDj(B*/
+     /* 各プレイヤの戦略決定*/
      Player1(prevStrtgy1, prevStrtgy2,  &currentStrtgy1);
      Player2(prevStrtgy1, prevStrtgy2,  &currentStrtgy2);
 
-     /*$BMp?t$NH/@8(B*/
+     /*乱数の発生*/
      random = rand()%100;
 
-     /* $B%W%l%$%d(B1$B$K%(%i!<$,5/$-$?>l9g$O@oN,$r5U$K$9$k(B */
+     /* プレイヤ1にエラーが起きた場合は戦略を逆にする */
 
      if (random < ERROR) {
        error_count1++;
@@ -167,10 +167,10 @@ int main(int argc, char *argv[]) {
        }
      }
 
-     /*$BMp?t$NH/@8(B*/
+     /*乱数の発生*/
      random = rand()%100;
 
-     /* $B%W%l%$%d(B2$B$K%(%i!<$,5/$-$?>l9g$O@oN,$r5U$K$9$k(B */
+     /* プレイヤ2にエラーが起きた場合は戦略を逆にする */
 
      if (random < ERROR) {
 
@@ -194,7 +194,7 @@ int main(int argc, char *argv[]) {
      prevStrtgy1 = currentStrtgy1;
      prevStrtgy2 = currentStrtgy2;
 
-     /*$BN>%W%l%$%d$N:#2s$N@oN,$NMxF@$HAmF@E@$N7W;;(B */
+     /*両プレイヤの今回の戦略の利得と総得点の計算 */
      payoff(currentStrtgy1, currentStrtgy2,  &payoff1, &payoff2);
 
      score1 = score1 + payoff1; 
@@ -202,7 +202,7 @@ int main(int argc, char *argv[]) {
 
    }
 
-   /* $B%2!<%`$N=*N;;~$NAmF@E@$NI=<((B */
+   /* ゲームの終了時の総得点の表示 */
    printf("Game Over!! Player1 score: %d, Player2 score: %d\n", score1, score2);
 
 //#ifdef DEBUG
