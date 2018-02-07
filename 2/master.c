@@ -10,6 +10,8 @@
 
 #define VERSION_1_0 1
 
+#define DEBUG
+
 /*:w
  * Load libralies (stdio.h, stdlib.h, time.h)
  *
