@@ -1,4 +1,12 @@
 /*
+  Author:      Kamada Kouki
+ Student ID:   b1015047
+ Class:        J
+ Created:      February 8, 2018
+ Language:     C
+*/
+
+/*
  * 必要なライブラリのロード
  * (stdio.hおよびstdlib.h)
  */
@@ -126,7 +134,7 @@ predator_position *predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_po
   {
     if(parent->status != OPEN)
     {
-      printf("おかしい\n");
+      printf("error\n");
       break;
     }
     //hereがオープン先
@@ -228,28 +236,32 @@ predator_position *predatorSearch(int world[WORLD_SIZE][WORLD_SIZE], predator_po
   return root;
 }
 
-int predator_isWall(int world[16][16], predator_position self, int dir)
+int predator_isUnknown(int world[16][16], predator_position self, int dir)
 {
     if(dir == 'u')
     {
+        if(self.x<2 || world[self.x-1][self.y] == -1)return 0;
         for(int x = self.x;x>0;x--)
         {
             if(world[x][self.y] == -10) return 1;
         }
     }else if(dir == 'r')
     {
+        if(self.y>14 || world[self.x][self.y+1] == -1)return 0;
         for(int y = self.y;y<16;y++)
         {
             if(world[self.x][y] == -10) return 1;
         }
     }else if(dir == 'd')
     {
+        if(self.x>14 || world[self.x+1][self.y] == -1)return 0;
         for(int x = self.x;x<16;x++)
         {
             if(world[x][self.y] == -10) return 1;
         }
     }else if(dir == 'l')
     {
+        if(self.y<2 || world[self.x][self.y-1] == -1)return 0;
         for(int y = self.y;y>0;y--)
         {
             if(world[self.x][y] == -10) return 1;
@@ -391,16 +403,16 @@ int predator_strategy(int self_id)
     if(!predator_isVisible(prey))
     {
         //もし非捕食者が見えてなかったときの行動
-        if(predator_isWall(predator_map[self_id],self,'u'))
+        if(predator_isUnknown(predator_map[self_id],self,'u'))
         {
             return 'u';
-        }else if(predator_isWall(predator_map[self_id],self,'r'))
+        }else if(predator_isUnknown(predator_map[self_id],self,'r'))
         {
             return 'r';
-        }else if(predator_isWall(predator_map[self_id],self,'d'))
+        }else if(predator_isUnknown(predator_map[self_id],self,'d'))
         {
             return 'd';
-        }else if(predator_isWall(predator_map[self_id],self,'l'))
+        }else if(predator_isUnknown(predator_map[self_id],self,'l'))
         {
             return 'l';
         }
@@ -463,7 +475,7 @@ int predator_strategy(int self_id)
         predator_position d_next;
         predator_position l_next;
         int temp_map[16][16];
-        printf("temp_map:id:%d\n",self_id);
+        //printf("temp_map:id:%d\n",self_id);
         for(int i=0;i<16;i++)
         {
             for(int j=0;j<16;j++)
@@ -484,13 +496,13 @@ int predator_strategy(int self_id)
                 {
                     temp_map[i][j] = predator_map[self_id][i][j];
                 }
-                printf("%d,",temp_map[i][j]);
+                //printf("%d,",temp_map[i][j]);
             }
-            printf("\n");
+            //printf("\n");
         }
         if(u_able == 1)
         {
-            printf("u_search\n");
+            //printf("u_search\n");
             predator_position *u_root = predatorSearch(temp_map, self, u_prey);
             distance[self_id][0] = sizeof(u_root)/sizeof(u_root[0]);
             u_next = u_root[1];
@@ -502,7 +514,7 @@ int predator_strategy(int self_id)
         }
         if(r_able == 1)
         {
-            printf("r_search\n");
+            //printf("r_search\n");
             predator_position *r_root = predatorSearch(temp_map, self, r_prey);
             distance[self_id][1] = sizeof(r_root)/sizeof(r_root[0]);
             r_next = r_root[1];
@@ -513,7 +525,7 @@ int predator_strategy(int self_id)
         }
         if(d_able == 1)
         {
-            printf("d_search\n");
+            //printf("d_search\n");
             predator_position *d_root = predatorSearch(temp_map, self, d_prey);
             distance[self_id][2] = sizeof(d_root)/sizeof(d_root[0]);
             d_next = d_root[1];
@@ -524,7 +536,7 @@ int predator_strategy(int self_id)
         }
         if(l_able == 1)
         {
-            printf("l_search\n");
+            //printf("l_search\n");
             predator_position *l_root = predatorSearch(temp_map, self, l_prey);
             distance[self_id][3] = sizeof(l_root)/sizeof(l_root[0]);
             l_next = l_root[1];
@@ -975,6 +987,7 @@ void Predator(int world1[16][16], int world2[16][16], int world3[16][16], int wo
     //printf("%d\n",world[0][0][0]);
 
     int exists[4][4];
+    int prey_exists[4];
 
     //ここで通信
     for(int id=0;id<4;id++)
@@ -983,6 +996,7 @@ void Predator(int world1[16][16], int world2[16][16], int world3[16][16], int wo
         {
             exists[id][i] = 0;
         }
+        prey_exists[id] = 0;
 
         //自分の状況をそれぞれmapに落とし込む
          //見える範囲の状況
@@ -990,7 +1004,6 @@ void Predator(int world1[16][16], int world2[16][16], int world3[16][16], int wo
         {
             for(int j=0;j<16;j++)
             {
-                //printf("%d,", world[id][i][j]);
                 switch(world[id][i][j])
                 {
                     case 1:
@@ -1000,6 +1013,7 @@ void Predator(int world1[16][16], int world2[16][16], int world3[16][16], int wo
                         exists[id][world[id][i][j]-1] = 1;
                         break;
                     case 10:
+                        prey_exists[id] = 1;
                         break;
                     default:
                         break;
@@ -1010,9 +1024,9 @@ void Predator(int world1[16][16], int world2[16][16], int world3[16][16], int wo
                 {
                     predator_map[id][i][j] = world[id][i][j];
                 }
-
+                //if(id == 3)printf("%d,", predator_map[id][i][j]);
             }
-            //printf("\n");
+            //if(id == 3)printf("\n");
         }
     }
 
@@ -1022,17 +1036,26 @@ void Predator(int world1[16][16], int world2[16][16], int world3[16][16], int wo
         {
             if(id == e) continue;
             if(exists[id][e] == 0) continue;
-            printf("%dと%dが通信\n",id,e);
+            //printf("%dと%dが通信\n",id,e);
             for(int i=0;i<16;i++)
             {
                 for(int j=0;j<16;j++)
                 {
-                    if(predator_map[e][i][j] != -10)
+                    if(predator_map[id][i][j] == id+1)
                     {
-                        if(predator_map[id][i][j] != id+1)
+                        predator_map[e][i][j] = predator_map[id][i][j];
+                    }else if(predator_map[id][i][j] == 10)
+                    {
+                        if(prey_exists[id] == 1)
+                        {
+                            predator_map[e][i][j] = predator_map[id][i][j];
+                        }else
                         {
                             predator_map[id][i][j] = predator_map[e][i][j];
                         }
+                    }else if(predator_map[e][i][j] != -10)
+                    {
+                        predator_map[id][i][j] = predator_map[e][i][j];
                     }
                 }
             }
