@@ -1,4 +1,12 @@
 /*
+  Author:      Kamada Kouki
+ Student ID:   b1015047
+ Class:        J
+ Created:      February 8, 2018
+ Language:     C
+*/
+
+/*
  * 必要なライブラリのロード
  * (stdio.hおよびstdlib.h)
  */
@@ -46,7 +54,7 @@ typedef enum {
     NONE,
     OPEN,
     CLOSED,
-} STATUS;
+} PREY_STATUS;
 
 typedef struct
 {
@@ -57,7 +65,7 @@ typedef struct
 typedef struct __preyAstar
 {
     prey_position pos;
-    STATUS status;
+    PREY_STATUS status;
     int cost;
     int heuristic;
     struct __preyAstar *parent;
@@ -264,6 +272,7 @@ void Prey(int world[WORLD_SIZE][WORLD_SIZE], int *action)
     }
 
     //移動可能な場所に行ったときの敵との最短距離を測る
+    //root[dir][unit],dir方向のunit番号のところにそこまでの距離がはいる．
     //上
     if (prey.x > 0 && world[prey.x - 1][prey.y] == VALUE_OF_FREE)
     {
@@ -309,6 +318,7 @@ void Prey(int world[WORLD_SIZE][WORLD_SIZE], int *action)
     }
 
     //距離が最大になるところを見つけてそこへ移動
+    //方向ごとの距離をsumにまとめて総合的に判断
     int max = 0;
     int max_index;
     int sum[4];
