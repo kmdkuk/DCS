@@ -246,40 +246,40 @@ int predator_isUnknown(int world[16][16], predator_position self, int dir)
 {
     if (dir == 'u')
     {
-        if (self.x < 2 || world[self.x - 1][self.y] == -1)
-            return 0;
         for (int x = self.x; x > 0; x--)
         {
+            if (self.x < 2 || world[x][self.y] == -1)
+                return 0;
             if (world[x][self.y] == -10)
                 return 1;
         }
     }
     else if (dir == 'r')
     {
-        if (self.y > 14 || world[self.x][self.y + 1] == -1)
-            return 0;
         for (int y = self.y; y < 16; y++)
         {
+            if (self.y > 14 || world[self.x][y] == -1)
+                return 0;
             if (world[self.x][y] == -10)
                 return 1;
         }
     }
     else if (dir == 'd')
     {
-        if (self.x > 14 || world[self.x + 1][self.y] == -1)
-            return 0;
         for (int x = self.x; x < 16; x++)
         {
+            if (self.x > 14 || world[x][self.y] == -1)
+                return 0;
             if (world[x][self.y] == -10)
                 return 1;
         }
     }
     else if (dir == 'l')
     {
-        if (self.y < 2 || world[self.x][self.y - 1] == -1)
-            return 0;
         for (int y = self.y; y > 0; y--)
         {
+            if (self.y < 2 || world[self.x][y] == -1)
+                return 0;
             if (world[self.x][y] == -10)
                 return 1;
         }
@@ -380,7 +380,7 @@ int predator_isExist(int self_id, predator_position prey, int dir)
 /*
   Function:predator_strategy(int self_id)
   Description:self_id番目のpredatorの行動を決定するプログラム
-                'u','d','r','l'のいずれかを返す．
+                'u','d','r','l','s'のいずれかを返す．
 */
 int predator_strategy(int self_id)
 {
@@ -431,11 +431,12 @@ int predator_strategy(int self_id)
                 break;
             }
             //if (self_id == 0)
-                //printf("%d,", predator_map[self_id][i][j]);
+            //printf("%d,", predator_map[self_id][i][j]);
         }
         //if (self_id == 0)
-            //printf("\n");
+        //printf("\n");
     }
+    //self_idに対応するものを設定
     predator_position self;
     switch (self_id)
     {
@@ -476,9 +477,10 @@ int predator_strategy(int self_id)
     {
         //捕食者が見えてるとき他の捕食者がどこに行くか計算し，自分の行く目標を立てる
         //predatorSearch(predator_map[id],from,to)で最短ルートの配列が帰ってくる．
-        //配列の長さで最短ルートの長さなのかな
+        //配列の長さから最短ルートの長さを測り行動決定
         int distance[4][4]; //distance[id][dir]dir=> 0:u 1:r 2:d 3:l
         predator_position u_prey;
+        //preyの上下左右が埋まっていないか判断する変数
         int u_able = 0;
         int d_able = 0;
         int l_able = 0;
@@ -490,6 +492,7 @@ int predator_strategy(int self_id)
             u_prey.x -= 1;
             if (self.x == u_prey.x && self.y == u_prey.y)
             {
+                //すでにpreyに接着しているのであればstayを選択
                 return 's';
             }
         }
@@ -526,10 +529,13 @@ int predator_strategy(int self_id)
                 return 's';
             }
         }
+        //ルートを導いた後，次にいくべき場所をそれぞれ保存する変数
+        //X_nextはXに向かうための次に行くべき場所．
         predator_position u_next;
         predator_position r_next;
         predator_position d_next;
         predator_position l_next;
+        //Lab１のときに用いたA*を使って求めるためにmap情報を編集する工程
         int temp_map[16][16];
         //printf("temp_map:id:%d\n",self_id);
         for (int i = 0; i < 16; i++)
@@ -540,19 +546,23 @@ int predator_strategy(int self_id)
                 {
                     if (predator_map[self_id][i][j] == self_id + 1)
                     {
+                        //自分の場所は1にする
                         temp_map[i][j] = 1;
                     }
                     else
                     {
+                        //自分以外のpredatorは-1にする．
                         temp_map[i][j] = -1;
                     }
                 }
                 else if (predator_map[self_id][i][j] == -10)
                 {
+                    //未探索値は-1に置き換える．
                     temp_map[i][j] = -1;
                 }
                 else
                 {
+                    //それ以外はそのまま
                     temp_map[i][j] = predator_map[self_id][i][j];
                 }
                 //printf("%d,",temp_map[i][j]);
@@ -561,6 +571,7 @@ int predator_strategy(int self_id)
         }
         if (u_able == 1)
         {
+            //上に行くことができれば,A*アルゴリズムを行い，次に行くべき場所を保存
             //printf("u_search\n");
             predator_position *u_root = predatorSearch(temp_map, self, u_prey);
             distance[self_id][0] = sizeof(u_root) / sizeof(u_root[0]);
@@ -569,8 +580,10 @@ int predator_strategy(int self_id)
         }
         else
         {
+            //もし行くことができなければ，99を設定する．
             distance[self_id][0] = 99;
         }
+        //以下それぞれの方向に対して，同様の処理を行う．
         if (r_able == 1)
         {
             //printf("r_search\n");
@@ -638,6 +651,7 @@ int predator_strategy(int self_id)
         p_pos[3][2] = predator3;
         p_id[3][2] = 1;
 
+        //自分の見えている範囲で他のpredatorがどこに行くか推測するための計算ステップ
         for (int id = 0; id > 3; id++)
         {
             if (predator_isVisible(p_pos[self_id][id]) && predator_isContact(p_pos[self_id][id], prey))
@@ -1006,7 +1020,7 @@ int predator_strategy(int self_id)
         }
     }
 }
-
+//predator1~4は同じ戦略を使って行動決定している．
 void Predator1(int world[16][16], int *action)
 {
     *action = predator_strategy(0);
@@ -1031,6 +1045,7 @@ void Predator4(int world[16][16], int *action)
     return;
 }
 
+//前半部分で視界情報の通信を行って，後半で行動決定のための関数呼び出しを行っている．
 void Predator(int world1[16][16], int world2[16][16], int world3[16][16], int world4[16][16],
               int *action1, int *action2, int *action3, int *action4)
 {
@@ -1073,7 +1088,7 @@ void Predator(int world1[16][16], int world2[16][16], int world3[16][16], int wo
     int exists[4][4];
     int prey_exists[4];
 
-    //ここで通信
+    //ここから通信の処理
     for (int id = 0; id < 4; id++)
     {
         for (int i = 0; i < 4; i++)
@@ -1082,7 +1097,7 @@ void Predator(int world1[16][16], int world2[16][16], int world3[16][16], int wo
         }
         prey_exists[id] = 0;
 
-        //自分の状況をそれぞれmapに落とし込む
+        //それぞれの状況をそれぞれmapに落とし込む
         //見える範囲の状況
         for (int i = 0; i < 16; i++)
         {
